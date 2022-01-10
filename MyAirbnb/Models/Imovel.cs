@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAirbnb.Models
 {
@@ -12,7 +14,7 @@ namespace MyAirbnb.Models
         [Required]
         public string Nome { get; set; }
 
-        [Required, Range(0,9999)]
+        [Required, Range(0,9999), DisplayName("Espaço m²")]
         public float EspacoM2 { get; set; }
 
         [Required, DisplayName("Preço por noite")]
@@ -30,24 +32,49 @@ namespace MyAirbnb.Models
         [Required, DisplayName("Tem Piscina")]
         public bool TemPiscina { get; set; }
 
-        [Required, DataType(DataType.Time), DisplayName("Check-in")]
+        [Required, Range(0,10) ,DisplayName("Casa de banho")]
+        public int numeroWC { get; set; }
+
+        [Required, Range(0, 100) , DisplayName("Número de Hóspedes")]
+        public int NumeroPessoas { get; set; }
+
+        [Required, DataType(DataType.Time), DisplayName("Hora de Check-in")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime HoraCheckIn { get; set; }
 
-        [Required, DataType(DataType.Time), DisplayName("Check-out")]
+        [Required, DataType(DataType.Time), DisplayName("Hora de Check-out")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime HoraCheckOut { get; set; }
 
+        [Required]
+        public string Localidade { get; set; }
 
         [Required]
-        public int TipoImovelID { get; set; }
+        public string Rua { get; set; }
+
+        //Categoria
+        [Required]
+        public int TipoImovelId { get; set; }
 
         public virtual Categoria TipoImovel { get; set; }
 
+        [DisplayName("Descrição")]
+        public string Descricao { get; set; }        
 
+        public ICollection<Reserva> Reserva { get; set; }
 
-        public string Descricao { get; set; }
+        public ICollection<Imagens> Imagens { get; set; }
 
-        public string Image { get; set; }
+        //TODO: Alterar isto
+        [ForeignKey("Dono")]
+        public string DonoId { get; set; }
+
+        public ApplicationUser Dono { get; set; }
+
+        [ForeignKey("Responsavel")]
+        public string ResponsavelId { get; set; }
+
+        public ApplicationUser Responsavel { get; set; }
+
     }
 }

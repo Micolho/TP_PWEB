@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyAirbnb.Data;
+using MyAirbnb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,16 +29,12 @@ namespace MyAirbnb
         public void ConfigureServices(IServiceCollection services)
         {
             //DbContext's
-            services.AddDbContext<AirbnbDbContext>(options => 
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             //end
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();

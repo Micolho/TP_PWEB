@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyAirbnb.Models
 {
@@ -10,6 +11,7 @@ namespace MyAirbnb.Models
         [Required]
         public string Nome { get; set; }
 
+        [DisplayName("Descrição")]
         public string Descricao { get; set; }
     }
 
