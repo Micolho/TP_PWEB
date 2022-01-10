@@ -1,0 +1,38 @@
+﻿@model EditRoleViewModel
+
+@{
+    ViewData["Title"] = "Detalhes Role";
+}
+
+<h1>@ViewData["Tittle"]</h1>
+
+<div class="row">
+    <a class="btn btn-info  btn-sm m-3"
+    asp-action="EditUsersInRole" asp-route-id="@Model.Id">Adicionar users ao role</a>
+</div>
+
+<div>
+    <h5>Lista de users no role</h5>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Users) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
