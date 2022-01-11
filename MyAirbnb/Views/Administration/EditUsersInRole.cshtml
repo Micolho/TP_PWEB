@@ -1,0 +1,36 @@
+﻿@model List<UserRoleViewModel>
+
+<h1>Editar utilizadores no Role @ViewBag.RoleName</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+
+                @for(int i=0; i<Model.Count; i++)
+                {
+                    <div class="form-group">
+                        <input type="hidden" asp-for="@Model[i].UserId" />
+                        <input type="hidden" asp-for="@Model[i].UserName" />
+
+                        <input asp-for="@Model[i].IsSelected" class="form-check-input">
+                        <label asp-for="@Model[i].IsSelected" class="form-check-label"> @Model[i].UserName</label>
+                    </div>
+                }
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

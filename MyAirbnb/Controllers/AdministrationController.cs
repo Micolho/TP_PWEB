@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyAirbnb.Models;
 using MyAirbnb.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyAirbnb.Controllers
@@ -46,7 +48,7 @@ namespace MyAirbnb.Controllers
                 if (result.Succeeded)
                 {
                     //TODO:CHANGE THIS
-                    RedirectToAction("Index");
+                    return RedirectToAction("Index");
                 }
 
                 foreach (IdentityError erro in result.Errors)
@@ -73,15 +75,92 @@ namespace MyAirbnb.Controllers
             };
 
             //Users no Role
-
+            foreach(ApplicationUser user in _userManager.Users.ToList())
+            {
+                if( await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    model.Users.Add(user.UserName);
+                }
+            }
             
 
             return View(model);
         }
 
-        public IActionResult EditUsersInRole(string id)
+        public async Task<IActionResult> EditUsersInRole(string id)
         {
-            return View();
+
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.RoleName = role.Name;
+            ViewBag.RoleId = role.Id;
+
+            List<UserRoleViewModel> model = new List<UserRoleViewModel>();
+
+            foreach (ApplicationUser user in _userManager.Users.ToList())
+            {
+                UserRoleViewModel userRoleViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName
+                };
+
+                if(await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    //esta no role
+                    userRoleViewModel.IsSelected = true;
+                }
+                else
+                {
+                    // nao esta no role
+                    userRoleViewModel.IsSelected= false;
+                }
+
+                model.Add(userRoleViewModel);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            for(int i=0; i<model.Count; i++)
+            {
+                var user = await _userManager.FindByIdAsync(model[i].UserId);
+
+                if(user == null)
+                {
+                    continue;
+                }
+
+                IdentityResult result = null;
+
+                bool IsInRole = await _userManager.IsInRoleAsync(user, role.Name);
+
+                if(model[i].IsSelected && !(IsInRole))
+                {
+                    result = await _userManager.AddToRoleAsync(user, role.Name);
+                }
+                else
+                {
+                    result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+                }
+            }
+
+            return RedirectToAction("DetalhesRole", new { Id = role.Id });
         }
     }
 }
