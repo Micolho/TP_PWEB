@@ -15,11 +15,14 @@ namespace MyAirbnb.Models
         [DisplayName("Comentário")]
         public string Comentario { get; set; }
 
-        [ForeignKey("Reserva")]
-        public int ReservaId { get; set; }
+        //[ForeignKey("Reserva")]
+        //public int ReservaId { get; set; }
 
-        public virtual Reserva Reserva { get; set; }
+        //public virtual Reserva Reserva { get; set; }
 
+        public int? ImovelId { get; set; }
+
+        public virtual Imovel Imovel { get; set; }
 
         //TODO: alterar isto
         //public string NomeDoUtilizador { get; set; }

@@ -110,7 +110,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Descricao)
         </dd>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Dono)
         </dt>
         <dd class = "col-sm-10">
@@ -121,7 +121,7 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Responsavel.Id)
-        </dd>
+        </dd>*@
     </dl>
 </div>
 
@@ -135,25 +135,17 @@
         <tr>
             <th>User Name</th>
             <th>Stars</th>
-            <th>Check-In</th>
-            <th>Check-Out</th>
             <th>Comment</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in @Model.) {
+@foreach (var item in @Model.Classificacao) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Utilizador.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Estrelas)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reserva.DataCheckin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reserva.DataCheckout)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Comentario)

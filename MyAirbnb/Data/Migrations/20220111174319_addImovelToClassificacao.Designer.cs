@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAirbnb.Data;
 
 namespace MyAirbnb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220111174319_addImovelToClassificacao")]
+    partial class addImovelToClassificacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,12 +314,17 @@ namespace MyAirbnb.Data.Migrations
                     b.Property<int?>("ImovelId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReservaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UtilizadorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ImovelId");
+
+                    b.HasIndex("ReservaId");
 
                     b.HasIndex("UtilizadorId");
 
@@ -580,6 +587,12 @@ namespace MyAirbnb.Data.Migrations
                     b.HasOne("MyAirbnb.Models.Imovel", "Imovel")
                         .WithMany("Classificacao")
                         .HasForeignKey("ImovelId");
+
+                    b.HasOne("MyAirbnb.Models.Reserva", "Reserva")
+                        .WithMany()
+                        .HasForeignKey("ReservaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MyAirbnb.Models.ApplicationUser", "Utilizador")
                         .WithMany()
