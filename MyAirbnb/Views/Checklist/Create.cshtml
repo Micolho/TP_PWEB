@@ -1,4 +1,4 @@
-﻿@model MyAirbnb.Models.Checklist
+﻿@model CreateChecklistViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -27,10 +27,10 @@
                     <input class="form-check-input" asp-for="MomentoEntrega" /> @Html.DisplayNameFor(model => model.MomentoEntrega)
                 </label>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="DonoId" class="control-label"></label>
-                <select asp-for="DonoId" class ="form-control" asp-items="ViewBag.DonoId"></select>
-            </div>
+                <select asp-for="DonoId" type="hidden" class ="form-control d-none" asp-items="ViewBag.DonoId"></select>
+            </div>*@
             <div class="form-group">
                 <label asp-for="CategoriaId" class="control-label"></label>
                 <select asp-for="CategoriaId" class ="form-control" asp-items="ViewBag.CategoriaId"></select>

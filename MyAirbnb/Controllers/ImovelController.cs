@@ -80,7 +80,7 @@ namespace MyAirbnb.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", imovel.DonoId);
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id", imovel.ResponsavelId);
+            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Nome", imovel.ResponsavelId);
             ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome", imovel.TipoImovelId);
             return View(imovel);
         }

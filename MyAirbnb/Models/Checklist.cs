@@ -25,7 +25,7 @@ namespace MyAirbnb.Models
         public ApplicationUser Dono { get; set; }
 
         [Required]
-        [ForeignKey("IdCategoria")]
+        [ForeignKey("Categoria"), DisplayName("Categoria")]
         public int CategoriaId { get; set; }
         
         public virtual Categoria Categoria { get; set; }
