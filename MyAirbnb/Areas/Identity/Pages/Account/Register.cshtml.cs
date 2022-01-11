@@ -118,7 +118,11 @@ namespace MyAirbnb.Areas.Identity.Pages.Account
                     if (Input.Gestor)
                     {
                         //TODO: CHANGE THIS DEFAULT ROLE
-                        await _userManager.AddToRoleAsync(user, "xpto");
+                        await _userManager.AddToRoleAsync(user, "Gestor");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "Cliente");
                     }
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",

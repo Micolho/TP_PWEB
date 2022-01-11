@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,22 @@ namespace MyAirbnb.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [RegularExpression(@"^[0-9]{9,10}$")]
+            public int NIF { get; set; }
+
+            [Required, DisplayName("Citizenship Card Number")]
+            public string CC { get; set; }
+
+            [Required, RegularExpression(@"^[0-9]{9}$"), DisplayName("Mobile Phone Number")]
+            public int NumeroTelemovel { get; set; }
+
+            public string Morada { get; set; }
+
+            [Required]
+            public string Nome { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -77,11 +94,20 @@ namespace MyAirbnb.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            if (Input.CC != user.CC || Input.NIF != user.NIF ||
+                Input.NumeroTelemovel != user.NumeroTelemovel
+                || Input.Morada != user.Morada || 
+                Input.Nome != user.Nome)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                user.Nome = Input.Nome;
+                user.CC = Input.CC;
+                user.NIF = Input.NIF;
+                user.Morada = Input.Morada;
+                user.NumeroTelemovel = Input.NumeroTelemovel;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
