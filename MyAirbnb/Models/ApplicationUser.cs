@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAirbnb.Models
 {
@@ -24,6 +25,13 @@ namespace MyAirbnb.Models
         public DateTime DataDeNascimento { get; set; }
 
         public string Morada { get; set; }
+
+        //[NotMapped]
+        //public int EmpresaId { get; set; }
+        
+        //[NotMapped]
+        //public virtual Empresa Empresa { get; set; }
+
 
     }
 }

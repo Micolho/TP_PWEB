@@ -73,7 +73,7 @@ namespace MyAirbnb.Models
         [ForeignKey("Responsavel"), DisplayName("Responsável")]
         public string ResponsavelId { get; set; }
 
-        public ApplicationUser Responsavel { get; set; }
+        public virtual ApplicationUser Responsavel { get; set; }
 
     }
 }
