@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MyAirbnb.Models.Imovel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Properties";
 }
 
 <h1>Index</h1>
@@ -9,6 +9,60 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<hr/>
+@*<fieldset>
+    <legend>Filters</legend>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <label class="form-group">
+              @Html.DisplayNameFor(model => model.EspacoM2)
+              <input class="form-control">
+            </label>
+            <label class="form-group">
+              @Html.DisplayNameFor(model => model.PrecoPorNoite)
+              <input class="form-control">
+            </label>
+        </div>
+        <div class="col-md-4">
+            <label class="form-group">
+              <input class="form-check-input" type="checkbox" value="">
+              @Html.DisplayNameFor(model => model.TemJacuzzi)
+            </label>
+            <label class="form-group">
+              <input class="form-check-input" type="checkbox" value="">
+              @Html.DisplayNameFor(model => model.TemCozinha)
+            </label>
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+    </div>
+</fieldset>*@
+
+<form method="post">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <label class="form-group">
+              @Html.DisplayNameFor(model => model.EspacoM2)
+              <input class="form-control">
+            </label>
+            <label class="form-group">
+              @Html.DisplayNameFor(model => model.PrecoPorNoite)
+              <input class="form-control">
+            </label>
+        </div>
+        <div class="col-md-4">
+            <label class="form-group">
+              <input class="form-check-input" type="checkbox" value="">
+              @Html.DisplayNameFor(model => model.TemJacuzzi)
+            </label>
+            <label class="form-group">
+              <input class="form-check-input" type="checkbox" value="">
+              @Html.DisplayNameFor(model => model.TemCozinha)
+            </label>
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

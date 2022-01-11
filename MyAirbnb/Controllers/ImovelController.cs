@@ -26,6 +26,16 @@ namespace MyAirbnb.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index([Bind("EspacoM2,PrecoPorNoite,NumeroCamas,TemCozinha,TemJacuzzi,TemPiscina,numeroWC,NumeroPessoas,HoraCheckIn,HoraCheckOut,Localidade,Rua,TipoImovelId,Descricao,DonoId,ResponsavelId")] Imovel imovel)
+        {
+            var applicationDbContext = _context.Imoveis
+                .Include(i => i.Dono)
+                .Include(i => i.Responsavel)
+                .Include(i => i.TipoImovel);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
         // GET: Imovel/Details/5
         public async Task<IActionResult> Details(int? id)
         {
