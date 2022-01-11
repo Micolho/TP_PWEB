@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace MyAirbnb.Controllers
     public class ChecklistsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<ApplicationUser> _userManager;
 
-        public ChecklistsController(ApplicationDbContext context)
+        public ChecklistsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Checklists
@@ -50,7 +53,7 @@ namespace MyAirbnb.Controllers
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
-            ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Nome");
             return View();
         }
 
