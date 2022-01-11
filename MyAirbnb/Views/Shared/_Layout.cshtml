@@ -31,19 +31,19 @@
                             </li>*@
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Imovel"
+                                <a class="nav-link" asp-area="" asp-controller="Imovel"
                                 asp-action="Index">Imovel</a>
                             </li>
 
                             @if (User.IsInRole("Admins"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categoria"
+                                    <a class="nav-link" asp-area="" asp-controller="Categoria"
                                     asp-action="Index">Categories</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administration"
+                                    <a class="nav-link" asp-area="" asp-controller="Administration"
                                     asp-action="Index">Administration</a>
                                 </li>
                             }
@@ -65,7 +65,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted fixed-bottom">
         <div class="container">
             &copy; 2022 - MyAirbnb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

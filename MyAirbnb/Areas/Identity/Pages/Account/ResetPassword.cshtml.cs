@@ -47,18 +47,19 @@ namespace MyAirbnb.Areas.Identity.Pages.Account
 
         public IActionResult OnGet(string code = null)
         {
-            if (code == null)
-            {
-                return BadRequest("A code must be supplied for password reset.");
-            }
-            else
-            {
-                Input = new InputModel
-                {
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-                };
-                return Page();
-            }
+            return Page();      //Because we don't have an email sender
+            //if (code == null)
+            //{
+            //    return BadRequest("A code must be supplied for password reset.");
+            //}
+            //else
+            //{
+            //    Input = new InputModel
+            //    {
+            //        Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+            //    };
+            //    return Page();
+            //}
         }
 
         public async Task<IActionResult> OnPostAsync()
