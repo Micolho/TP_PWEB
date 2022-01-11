@@ -54,6 +54,13 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
+            var reviews = await _context.Classificacaos
+                .;
+            if (imovel != null)
+            {
+                imovel.
+            }
+
             return View(imovel);
         }
 

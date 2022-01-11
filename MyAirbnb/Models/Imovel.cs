@@ -53,9 +53,10 @@ namespace MyAirbnb.Models
         public string Rua { get; set; }
 
         //Categoria
-        [Required, Range(0, 10), DisplayName("Tipologia")]
+        [Required, Range(0, 10)]
         public int TipoImovelId { get; set; }
 
+        [DisplayName("Tipologia")]
         public virtual Categoria TipoImovel { get; set; }
 
         [DisplayName("Descrição")]
