@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyAirbnb.Data;
 using MyAirbnb.Models;
+using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
     public class ImovelController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ImovelController(ApplicationDbContext context)
+        public ImovelController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Imovel
@@ -65,10 +69,31 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Imovel/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id");
+            //get user enterprise
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            ApplicationUser Patrao = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+            if (Patrao == null)
+            {
+                return NotFound();
+            }
+
+            Empresa empresa = await _context.Empresas.Where(d => d.DonoId == userId).FirstOrDefaultAsync();
+
+            if (empresa != null)
+            {
+///                ICollection<ApplicationUser> listFuncionarios = new List<ApplicationUser>();
+ //               listFuncionarios = empresa.Funcionarios;
+                ViewData["ResponsavelId"] = new SelectList( empresa.Funcionarios, "Id", "Nome");
+            }
+            else
+            {
+                ViewData["ResponsavelId"] = user.Nome;
+            }
             ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome");
             return View();
         }
@@ -78,18 +103,45 @@ namespace MyAirbnb.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,EspacoM2,PrecoPorNoite,NumeroCamas,TemCozinha,TemJacuzzi,TemPiscina,numeroWC,NumeroPessoas,HoraCheckIn,HoraCheckOut,Localidade,Rua,TipoImovelId,Descricao,DonoId,ResponsavelId")] Imovel imovel)
+        public async Task<IActionResult> Create(CreateImovelViewModel  model)
         {
             if (ModelState.IsValid)
             {
+                //create object imovel
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return NotFound();
+
+
+                Imovel imovel = new Imovel
+                {
+                    PrecoPorNoite = model.PrecoPorNoite,
+                    EspacoM2 = model.EspacoM2,
+                    Nome = model.Nome,
+                    NumeroCamas = model.NumeroCamas,
+                    NumeroPessoas = model.NumeroPessoas,
+                    numeroWC = model.numeroWC,
+                    TemCozinha = model.TemCozinha,
+                    TemJacuzzi = model.TemJacuzzi,
+                    TemPiscina = model.TemPiscina,
+                    HoraCheckIn = model.HoraCheckIn,
+                    HoraCheckOut = model.HoraCheckOut,
+                    Localidade = model.Localidade,
+                    Rua = model.Rua,
+                    TipoImovelId = model.TipoImovelId,
+                    Descricao = model.Descricao,
+                    DonoId = user.Id,
+                    ResponsavelId = user.Id,
+                };
+
                 _context.Add(imovel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", imovel.DonoId);
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Nome", imovel.ResponsavelId);
-            ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome", imovel.TipoImovelId);
-            return View(imovel);
+            ///ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", imovel.DonoId);
+            //ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Nome", imovel.ResponsavelId);
+            ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome", model.TipoImovelId);
+            return View(model);
         }
 
         // GET: Imovel/Edit/5

@@ -66,6 +66,8 @@ namespace MyAirbnb.Models
 
         public ICollection<Imagens> Imagens { get; set; }
 
+        public ICollection<Classificacao> Classificacao { get; set; }
+
         [ForeignKey("Dono"), DisplayName("Dono")]
         public string DonoId { get; set; }
 
@@ -74,7 +76,7 @@ namespace MyAirbnb.Models
         [ForeignKey("Responsavel"), DisplayName("Responsável")]
         public string ResponsavelId { get; set; }
 
-        public ApplicationUser Responsavel { get; set; }
+        public virtual ApplicationUser Responsavel { get; set; }
 
     }
 }
