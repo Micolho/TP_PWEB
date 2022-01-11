@@ -53,7 +53,7 @@ namespace MyAirbnb.Models
         public string Rua { get; set; }
 
         //Categoria
-        [Required]
+        [Required, Range(0, 10), DisplayName("Tipologia")]
         public int TipoImovelId { get; set; }
 
         public virtual Categoria TipoImovel { get; set; }
@@ -65,13 +65,12 @@ namespace MyAirbnb.Models
 
         public ICollection<Imagens> Imagens { get; set; }
 
-        //TODO: Alterar isto
-        [ForeignKey("Dono")]
+        [ForeignKey("Dono"), DisplayName("Dono")]
         public string DonoId { get; set; }
 
         public ApplicationUser Dono { get; set; }
 
-        [ForeignKey("Responsavel")]
+        [ForeignKey("Responsavel"), DisplayName("Responsável")]
         public string ResponsavelId { get; set; }
 
         public ApplicationUser Responsavel { get; set; }

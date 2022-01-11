@@ -79,8 +79,10 @@ namespace MyAirbnb.Areas.Identity.Pages.Account
             [Required, DataType(DataType.Date), DisplayName("Birth Date")]
             public DateTime DataDeNascimento { get; set; }
 
+            [Display(Name = "Address")]
             public string Morada { get; set; }
 
+            [Display(Name = "Manager Role")]
             public bool Gestor { get; set; }
         }
 
