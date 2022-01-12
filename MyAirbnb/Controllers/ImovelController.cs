@@ -58,6 +58,7 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
+            imovel.Classificacao = new List<Classificacao>();
             var reviews = await _context.Classificacaos
                 .Where(m => m.ImovelId == imovel.Id).ToArrayAsync();
 
@@ -65,8 +66,6 @@ namespace MyAirbnb.Controllers
             {
                 imovel.Classificacao = reviews;
             }
-
-            imovel.Classificacao = new List<Classificacao>();
 
             return View(imovel);
         }

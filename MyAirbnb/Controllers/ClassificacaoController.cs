@@ -49,7 +49,7 @@ namespace MyAirbnb.Controllers
         // GET: Classificacao/Create
         public IActionResult Create()
         {
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Nome");
+            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id");
             ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -67,7 +67,7 @@ namespace MyAirbnb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Nome", classificacao.ImovelId);
+            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id", classificacao.ImovelId);
             ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id", classificacao.UtilizadorId);
             return View(classificacao);
         }
@@ -85,7 +85,7 @@ namespace MyAirbnb.Controllers
             {
                 return NotFound();
             }
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", classificacao.ImovelId);
+            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id", classificacao.ImovelId);
             ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id", classificacao.UtilizadorId);
             return View(classificacao);
         }
@@ -122,7 +122,7 @@ namespace MyAirbnb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", classificacao.ImovelId);
+            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id", classificacao.ImovelId);
             ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id", classificacao.UtilizadorId);
             return View(classificacao);
         }
