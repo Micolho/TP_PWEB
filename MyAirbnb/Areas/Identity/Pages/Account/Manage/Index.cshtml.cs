@@ -64,7 +64,12 @@ namespace MyAirbnb.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Nome = user.Nome,
+                NIF = user.NIF,
+                CC = user.CC,
+                Morada = user.Morada,
+                NumeroTelemovel = user.NumeroTelemovel
             };
         }
 

@@ -8,14 +8,12 @@
 
 <div>
     <h4>Imovel</h4>
-    @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-    {
-        <p>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        </p>
-    }
-    
-    <a asp-action="Index">Back to List</a>
+        @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit | </a>
+        }
+        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-primary" style="float:right" asp-action="Index">Reservar</a>
 </div>
 <hr />
 <div>
