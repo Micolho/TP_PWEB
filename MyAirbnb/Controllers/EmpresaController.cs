@@ -29,6 +29,13 @@ namespace MyAirbnb.Controllers
         // GET: Empresas
         public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
+            var applicationDbContext = _context.Empresas.Include(e => e.Dono).Where(u => u.DonoId == user.Id);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> IndexAdmin()
+        {
             var applicationDbContext = _context.Empresas.Include(e => e.Dono);
             return View(await applicationDbContext.ToListAsync());
         }
