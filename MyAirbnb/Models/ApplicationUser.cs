@@ -27,7 +27,7 @@ namespace MyAirbnb.Models
         public string Morada { get; set; }
 
         
-        public int EmpresaId { get; set; }
+        public int? EmpresaId { get; set; }
         
         public virtual Empresa Empresa { get; set; }
 

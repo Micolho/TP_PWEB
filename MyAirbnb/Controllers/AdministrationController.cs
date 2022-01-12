@@ -107,7 +107,7 @@ namespace MyAirbnb.Controllers
                 UserRoleViewModel userRoleViewModel = new UserRoleViewModel
                 {
                     UserId = user.Id,
-                    UserName = user.UserName
+                    UserName = user.Nome
                 };
 
                 if(await _userManager.IsInRoleAsync(user, role.Name))
@@ -154,7 +154,7 @@ namespace MyAirbnb.Controllers
                 {
                     result = await _userManager.AddToRoleAsync(user, role.Name);
                 }
-                else
+                else if (!(model[i].IsSelected) && (IsInRole))
                 {
                     result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                 }

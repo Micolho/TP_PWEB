@@ -16,11 +16,14 @@ namespace MyAirbnb.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public EmpresaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EmpresaController(RoleManager<IdentityRole> roleManager, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
+
         }
 
         // GET: Empresas
@@ -46,6 +49,15 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
+
+            var funcionarios = await _context.Users.Where(f => f.EmpresaId == empresa.Id).ToListAsync();
+
+            empresa.Funcionarios = new List<ApplicationUser>();
+            if (funcionarios.Any())
+            {
+                empresa.Funcionarios = funcionarios;
+            }
+
             return View(empresa);
         }
 
@@ -66,6 +78,18 @@ namespace MyAirbnb.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
 
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var temEmpresa = _context.Empresas.Where(d => d.DonoId == user.Id).FirstOrDefault();
+
+                if (temEmpresa != null)
+                {   //TODO: alterar o index para possivelmente receber msg erros
+                    return (RedirectToAction("Index", new { message = "Can't belong to more than 1 Enterprise" }));
+                }
+
                 Empresa empresa = new Empresa
                 {
                     DonoId = user.Id,
@@ -78,59 +102,6 @@ namespace MyAirbnb.Controllers
             }
             //ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", empresa.DonoId);
             return View(model);
-        }
-
-        // GET: Empresas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var empresa = await _context.Empresas.FindAsync(id);
-            if (empresa == null)
-            {
-                return NotFound();
-            }
-            ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", empresa.DonoId);
-            return View(empresa);
-        }
-
-        // POST: Empresas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,DonoId")] Empresa empresa)
-        {
-            if (id != empresa.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(empresa);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmpresaExists(empresa.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["DonoId"] = new SelectList(_context.Users, "Id", "Id", empresa.DonoId);
-            return View(empresa);
         }
 
         // GET: Empresas/Delete/5
@@ -166,6 +137,98 @@ namespace MyAirbnb.Controllers
         private bool EmpresaExists(int id)
         {
             return _context.Empresas.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> EditFuncionarios(string id)
+        {
+            List<UserRoleViewModel> model = new List<UserRoleViewModel>();
+
+            var funcList = await _context.Users.Where(u => u.EmpresaId == int.Parse(id)).ToListAsync();
+
+            foreach (ApplicationUser user in _userManager.Users.ToList())
+            {
+
+
+                UserRoleViewModel userRoleViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.Nome
+                };
+
+                if(await _userManager.IsInRoleAsync(user, "Funcionario"))
+                {
+                    //verificar se esta nesta empresa
+                    if (funcList.Contains(user))
+                    {
+                        userRoleViewModel.IsSelected = true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else if(await _userManager.IsInRoleAsync(user, "Cliente"))
+                {
+                    userRoleViewModel.IsSelected = false;
+
+                }
+                else
+                {
+                    continue;
+                }
+                model.Add(userRoleViewModel);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditFuncionarios(List<UserRoleViewModel> model, string id)
+        {
+            for( int i = 0;  i<model.Count; i++)
+            {
+                var user = await _userManager.FindByIdAsync(model[i].UserId);
+                
+                if (user == null)
+                    continue;
+
+                IdentityResult result = null;
+
+                bool IsInRole = await _userManager.IsInRoleAsync(user, "Funcionario");
+
+                if(model[i].IsSelected && !(IsInRole))
+                {
+
+                    user.EmpresaId = int.Parse(id);
+                    try
+                    {
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                    }catch (DbUpdateConcurrencyException)
+                    {
+                        return NotFound();
+                    }
+
+                    result = await _userManager.AddToRoleAsync(user, "Funcionario");
+                    result = await _userManager.RemoveFromRoleAsync(user, "Cliente");
+                }
+                else if (!(model[i].IsSelected) && (IsInRole))
+                {
+                    user.EmpresaId = null;
+                    try
+                    {
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        return NotFound();
+                    }
+                    result = await _userManager.RemoveFromRoleAsync(user, "Funcionario");
+                    result = await _userManager.AddToRoleAsync(user, "Cliente");
+
+                }
+            }
+            return RedirectToAction("EditFuncionarios", new { Id = id });
         }
     }
 }
