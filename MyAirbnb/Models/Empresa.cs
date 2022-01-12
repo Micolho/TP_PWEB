@@ -11,8 +11,10 @@ namespace MyAirbnb.Models
 
         [ForeignKey("Dono")]
         public string DonoId { get; set; }
+
         public ApplicationUser Dono { get; set; }
 
+        [NotMapped]
         public ICollection<ApplicationUser> Funcionarios { get; set; }
     }
 }

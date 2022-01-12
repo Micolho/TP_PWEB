@@ -26,7 +26,9 @@ namespace MyAirbnb.Controllers
         // GET: Imovel
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Imoveis.Include(i => i.Dono).Include(i => i.Responsavel).Include(i => i.TipoImovel);
+            var applicationDbContext = _context.Imoveis.Include(i => i.Dono)
+                                                .Include(i => i.Responsavel)
+                                                .Include(i => i.TipoImovel);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -89,13 +91,14 @@ namespace MyAirbnb.Controllers
 
             if (empresa != null)
             {
-///                ICollection<ApplicationUser> listFuncionarios = new List<ApplicationUser>();
- //               listFuncionarios = empresa.Funcionarios;
+                ///ICollection<ApplicationUser> listFuncionarios = new List<ApplicationUser>();
+                ///listFuncionarios = empresa.Funcionarios;
                 ViewData["ResponsavelId"] = new SelectList( empresa.Funcionarios, "Id", "Nome");
             }
             else
             {
-                ViewData["ResponsavelId"] = user.Nome;
+                string[] responsavel =new string[] { user.Nome };
+                ViewData["ResponsavelId"] = new SelectList( user.Nome, user.Id);
             }
             ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome");
             return View();

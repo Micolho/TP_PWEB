@@ -26,11 +26,10 @@ namespace MyAirbnb.Models
 
         public string Morada { get; set; }
 
-        //[NotMapped]
-        //public int EmpresaId { get; set; }
         
-        //[NotMapped]
-        //public virtual Empresa Empresa { get; set; }
+        public int EmpresaId { get; set; }
+        
+        public virtual Empresa Empresa { get; set; }
 
 
     }
