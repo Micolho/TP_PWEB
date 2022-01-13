@@ -32,6 +32,7 @@ namespace MyAirbnb.Controllers
             return View(await applicationDbContext.OrderBy(c => c.Localidade).ToListAsync());
         }
 
+        //TODO: CRIAR VISTA PARA ESTA ACTION
         public async Task<IActionResult> MyIndex()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -185,6 +186,12 @@ namespace MyAirbnb.Controllers
             }
             var user = await _userManager.GetUserAsync(User);
             //reutilizar o viewmodel uma vez que a informacao e a mesma necessaria!
+
+            if (user.Id != imovel.DonoId)
+            {
+                return NotFound();
+            }
+
             CreateImovelViewModel model = new CreateImovelViewModel
             {
                 Id = imovel.Id,    
@@ -235,29 +242,13 @@ namespace MyAirbnb.Controllers
         public async Task<IActionResult> Edit(int? id, CreateImovelViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
+            var oldImovel = await _context.Imoveis.FindAsync(id);
 
-            Imovel imovel = new Imovel
+            if (user.Id != oldImovel.DonoId)
             {
-                Id = model.Id,
-                PrecoPorNoite = model.PrecoPorNoite,
-                EspacoM2 = model.EspacoM2,
-                Nome = model.Nome,
-                NumeroCamas = model.NumeroCamas,
-                NumeroPessoas = model.NumeroPessoas,
-                numeroWC = model.numeroWC,
-                TemCozinha = model.TemCozinha,
-                TemJacuzzi = model.TemJacuzzi,
-                TemPiscina = model.TemPiscina,
-                HoraCheckIn = model.HoraCheckIn,
-                HoraCheckOut = model.HoraCheckOut,
-                Localidade = model.Localidade,
-                Rua = model.Rua,
-                TipoImovelId = model.TipoImovelId,
-                Descricao = model.Descricao,
-                ResponsavelId = model.ResponsavelId,
-                DonoId = user.Id,
-            };
-            
+                return NotFound();
+            }
+
             if (id != model.Id)
             {
                 return NotFound();
@@ -265,6 +256,28 @@ namespace MyAirbnb.Controllers
 
             if (ModelState.IsValid)
             {
+                Imovel imovel = new Imovel
+                {
+                    Id = model.Id,
+                    PrecoPorNoite = model.PrecoPorNoite,
+                    EspacoM2 = model.EspacoM2,
+                    Nome = model.Nome,
+                    NumeroCamas = model.NumeroCamas,
+                    NumeroPessoas = model.NumeroPessoas,
+                    numeroWC = model.numeroWC,
+                    TemCozinha = model.TemCozinha,
+                    TemJacuzzi = model.TemJacuzzi,
+                    TemPiscina = model.TemPiscina,
+                    HoraCheckIn = model.HoraCheckIn,
+                    HoraCheckOut = model.HoraCheckOut,
+                    Localidade = model.Localidade,
+                    Rua = model.Rua,
+                    TipoImovelId = model.TipoImovelId,
+                    Descricao = model.Descricao,
+                    ResponsavelId = model.ResponsavelId,
+                    DonoId = user.Id,
+                };
+
                 try
                 {
                     _context.Update(imovel);
