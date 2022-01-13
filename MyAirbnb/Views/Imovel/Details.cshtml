@@ -13,7 +13,7 @@
             <a asp-action="Edit" asp-route-id="@Model.Id">Edit | </a>
         }
         <a asp-action="Index">Back to List</a>
-        <a class="btn btn-primary" style="float:right" asp-action="Index">Reservar</a>
+        <a class="btn btn-primary" style="float:right" asp-controller="Reserva" asp-action="Create" asp-route-id="@Model.Id" >Reservar</a>
 </div>
 <hr />
 <div>
