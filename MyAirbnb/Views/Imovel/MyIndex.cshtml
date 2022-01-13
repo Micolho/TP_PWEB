@@ -87,18 +87,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.TipoImovel)
             </th>
-            @if (User.IsInRole("Admins"))
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Dono)
-                </th>
-            }
-            @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Responsavel)
-                </th>
-            }
+            <th>
+                @Html.DisplayNameFor(model => model.Dono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Responsavel)
+            </th>
 
             <th></th>
         </tr>
@@ -124,21 +118,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TipoImovel.Nome)
             </td>
-            @if(User.IsInRole("Admins")){
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dono.Nome)
-                </td>
-            }
-            @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Responsavel.Nome)
-                </td>
-            }
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                @Html.DisplayFor(modelItem => item.Dono.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Responsavel.Nome)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
