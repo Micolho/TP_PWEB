@@ -7,7 +7,7 @@ namespace MyAirbnb.Models
     {
         public int Id { get; set; }
 
-        public int Path { get; set; }
+        public string FilePath { get; set; }
 
 /*        [ForeignKey("DoneChecklistId"),]
         public int? DoneChecklistId { get; set; }
