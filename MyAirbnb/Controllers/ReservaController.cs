@@ -46,11 +46,22 @@ namespace MyAirbnb.Controllers
             return View(reserva);
         }
 
-        // GET: Reserva/Create
-        public IActionResult Create()
+        // GET: Reserva/Create/<ImovelId>
+        public async Task<IActionResult> Create(int? id)
         {
-            ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade");
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var imovel = await _context.Imoveis.FindAsync(id);
+            if (imovel == null)
+            {
+                return NotFound();
+            }
+            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Nome");
+            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localizacao");
+            ViewData["ImovelNome"] = imovel.Nome;
+
             return View();
         }
 
@@ -67,8 +78,8 @@ namespace MyAirbnb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
+            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
+            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
             return View(reserva);
         }
 
