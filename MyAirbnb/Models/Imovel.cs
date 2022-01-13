@@ -60,7 +60,10 @@ namespace MyAirbnb.Models
         public virtual Categoria TipoImovel { get; set; }
 
         [DisplayName("Descrição")]
-        public string Descricao { get; set; }        
+        public string Descricao { get; set; }       
+        
+        [Required]
+        public bool Listado { get; set; }
 
         public ICollection<Reserva> Reserva { get; set; }
 
