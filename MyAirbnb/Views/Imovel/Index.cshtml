@@ -92,11 +92,11 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Dono)
                 </th>
-            }
-            @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-            {
                 <th>
                     @Html.DisplayNameFor(model => model.Responsavel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Listado)
                 </th>
             }
 
@@ -128,11 +128,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Dono.Nome)
                 </td>
-            }
-            @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-            {
                 <td>
                     @Html.DisplayFor(modelItem => item.Responsavel.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Listado)
                 </td>
             }
             <td>

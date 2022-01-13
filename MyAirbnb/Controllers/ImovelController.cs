@@ -28,7 +28,8 @@ namespace MyAirbnb.Controllers
         {
             var applicationDbContext = _context.Imoveis.Include(i => i.Dono)
                                                 .Include(i => i.Responsavel)
-                                                .Include(i => i.TipoImovel);
+                                                .Include(i => i.TipoImovel)
+                                                .Where(i => i.Listado);
             return View(await applicationDbContext.OrderBy(c => c.Localidade).ToListAsync());
         }
 
@@ -70,6 +71,7 @@ namespace MyAirbnb.Controllers
             {
                 return NotFound();
             }
+
 
             imovel.Classificacao = new List<Classificacao>();
             var reviews = await _context.Classificacaos
@@ -142,6 +144,7 @@ namespace MyAirbnb.Controllers
                     Descricao = model.Descricao,
                     ResponsavelId = model.ResponsavelId,
                     DonoId = user.Id,
+                    Listado = model.Listado
                 };
 
                 _context.Add(imovel);
@@ -212,6 +215,7 @@ namespace MyAirbnb.Controllers
                 Descricao = imovel.Descricao,
                 ResponsavelId = imovel.ResponsavelId,
                 DonoId = user.Id,
+                Listado = imovel.Listado
             };
 
             var userId = user.Id;
@@ -276,6 +280,7 @@ namespace MyAirbnb.Controllers
                     Descricao = model.Descricao,
                     ResponsavelId = model.ResponsavelId,
                     DonoId = user.Id,
+                    Listado = model.Listado
                 };
 
                 try
@@ -322,38 +327,6 @@ namespace MyAirbnb.Controllers
             }
             ViewData["TipoImovelId"] = new SelectList(_context.Categorias, "Id", "Nome", model.TipoImovelId);
             return View(model);
-        }
-
-        // GET: Imovel/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var imovel = await _context.Imoveis
-                .Include(i => i.Dono)
-                .Include(i => i.Responsavel)
-                .Include(i => i.TipoImovel)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imovel == null)
-            {
-                return NotFound();
-            }
-
-            return View(imovel);
-        }
-
-        // POST: Imovel/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var imovel = await _context.Imoveis.FindAsync(id);
-            _context.Imoveis.Remove(imovel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool ImovelExists(int id)

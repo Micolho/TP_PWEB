@@ -76,5 +76,8 @@ namespace MyAirbnb.ViewModels
 
         public ApplicationUser Responsavel { get; set; }
 
+        [Required]
+        public bool Listado { get; set; }
+
     }
 }
