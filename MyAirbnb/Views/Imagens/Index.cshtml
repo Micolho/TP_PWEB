@@ -1,14 +1,26 @@
 ﻿@model IEnumerable<MyAirbnb.Models.Imagens>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Images";
 }
 
-<h1>Index</h1>
+<h1>@ViewBag.Title</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <div>
+            <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" style="margin-right:30px" name="files" id="inputFile" multiple />
+        </div>
+        <div>
+            <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
+        </div>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -25,7 +37,6 @@
                 @Html.DisplayFor(modelItem => item.FilePath)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
@@ -33,3 +44,49 @@
 }
     </tbody>
 </table>
+
+<hr/>
+
+@foreach(var img in Model)
+{
+    <img src="@Url.Content(@img.FilePath)" alt="Imagem">
+    @*<asp:Image ImageUrl="../wwwroot/Files/Screenshot_1.png" runat="server" />*@
+}
+
+@*Different upload button types:*@
+@*<form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <div class="custom-file">
+            <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" name="files" id="inputFile" multiple />
+        </div>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
+        </div>
+    </div>
+</form>
+<form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <div class="custom-file">
+            <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" name="files" id="inputFile" multiple />
+        </div>
+        <div>
+            <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
+        </div>
+    </div>
+</form>
+<form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <input type="file" accept="image/png,image/jpeg" class="btn-outline-secondary custom-file" style="cursor:pointer" name="files" id="inputFile" multiple />
+        <div class="input-group-append">
+            <button type="submit" class="input-group-text btn-outline-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
+        </div>
+    </div>
+</form>
+<form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <input type="file" accept="image/png,image/jpeg" class="btn-outline-secondary" style="cursor:pointer" name="files" id="inputFile" multiple />
+        <div class="input-group-append">
+            <button type="submit" class="input-group-text btn-outline-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
+        </div>
+    </div>
+</form>*@

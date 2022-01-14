@@ -24,17 +24,19 @@ namespace MyAirbnb.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(int? id, List<IFormFile> files)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
+            //if (id == null)
+            //{   // the id of the imovel must be specified
+            //    return NotFound();
+            //}
             foreach (var file in files)
             {
-                var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\Files\\");
-                bool basePathExists = System.IO.Directory.Exists(basePath);
-                if (!basePathExists) Directory.CreateDirectory(basePath);
+                var basePath = Path.Combine(Directory.GetCurrentDirectory() +
+                    Path.DirectorySeparatorChar + "wwwroot" + 
+                    Path.DirectorySeparatorChar + "Files" + Path.DirectorySeparatorChar);
 
-                var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                if (!Directory.Exists(basePath))
+                    Directory.CreateDirectory(basePath);
+
                 var filePath = Path.Combine(basePath, file.FileName);
                 if (!System.IO.File.Exists(filePath))
                 {
@@ -42,37 +44,38 @@ namespace MyAirbnb.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
-                    var fileModel = new Imagens()
+                    var model = new Imagens()
                     {
                         FilePath = filePath
                     };
-                    _context.Imagens.Add(fileModel);
+                    _context.Imagens.Add(model);
                     _context.SaveChanges();
                 }
             }
-            TempData["Message"] = "File successfully uploaded to File System.";
             return RedirectToAction("Index");
         }
 
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var file = await _context.Imagens.Where(x => x.Id == id).FirstOrDefaultAsync();
-        //    if (file == null) return null;
-        //    if (System.IO.File.Exists(file.FilePath))
-        //    {
-        //        System.IO.File.Delete(file.FilePath);
-        //    }
-        //    _context.Imagens.Remove(file);
-        //    _context.SaveChanges();
-        //    TempData["Message"] = $"Removed {file.Name + file.Extension} successfully from File System.";
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var file = await _context.Imagens.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (file == null)
+                return null;
+            if (System.IO.File.Exists(file.FilePath))
+            {
+                System.IO.File.Delete(file.FilePath);
+            }
+            _context.Imagens.Remove(file);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
-        //// GET: Imagens
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.Imagens.ToListAsync());
-        //}
+        // GET: Imagens
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Imagens.ToListAsync());
+        }
 
         // GET: Imagens/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -93,77 +96,77 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Imagens/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
         // POST: Imagens/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Path")] Imagens imagens)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(imagens);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(imagens);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,Path")] Imagens imagens)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(imagens);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(imagens);
+        //}
 
         // GET: Imagens/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var imagens = await _context.Imagens.FindAsync(id);
-            if (imagens == null)
-            {
-                return NotFound();
-            }
-            return View(imagens);
-        }
+        //    var imagens = await _context.Imagens.FindAsync(id);
+        //    if (imagens == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(imagens);
+        //}
 
         // POST: Imagens/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Path")] Imagens imagens)
-        {
-            if (id != imagens.Id)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,Path")] Imagens imagens)
+        //{
+        //    if (id != imagens.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(imagens);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ImagensExists(imagens.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(imagens);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(imagens);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!ImagensExists(imagens.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(imagens);
+        //}
 
         // GET: Imagens/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -184,15 +187,15 @@ namespace MyAirbnb.Controllers
         }
 
         // POST: Imagens/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var imagens = await _context.Imagens.FindAsync(id);
-            _context.Imagens.Remove(imagens);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var imagens = await _context.Imagens.FindAsync(id);
+        //    _context.Imagens.Remove(imagens);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool ImagensExists(int id)
         {
