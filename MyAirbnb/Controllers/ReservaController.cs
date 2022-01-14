@@ -2,28 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyAirbnb.Data;
 using MyAirbnb.Models;
+using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
     public class ReservaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservaController(ApplicationDbContext context)
+        public ReservaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reserva
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Reservas.Include(r => r.Cliente).Include(r => r.Imovel);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await _userManager.GetUserAsync(User);
+            var applicationDbContext = _context.Reservas
+                                        .Include(r => r.Cliente)
+                                        .Include(r => r.Imovel)
+                                        .Where(r => r.ClienteId == user.Id);
+            return View(await applicationDbContext.OrderBy(d => d.DataCheckin).ToListAsync());
         }
 
         // GET: Reserva/Details/5
@@ -58,11 +66,16 @@ namespace MyAirbnb.Controllers
             {
                 return NotFound();
             }
-            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Nome");
-            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localizacao");
-            ViewData["ImovelNome"] = imovel.Nome;
 
-            return View();
+            CreateReservaViewModel model = new CreateReservaViewModel
+            {
+                ImovelId = imovel.Id,
+                ImovelNome = imovel.Nome,
+                DataCheckin = DateTime.Today,
+                DataCheckout = DateTime.Today,
+            };
+
+            return View(model);
         }
 
         // POST: Reserva/Create
@@ -70,17 +83,70 @@ namespace MyAirbnb.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DataCheckin,DataCheckout,Confirmado,ImovelId,ClienteId")] Reserva reserva)
+        public async Task<IActionResult> Create(CreateReservaViewModel model)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
             if (ModelState.IsValid)
             {
+                if(model.DataCheckin <= DateTime.Today || model.DataCheckout <= DateTime.Today)
+                {
+                    ViewData["Erro"] = "Sadly, you can't time travel to the past to enjoy this amazing reserve...";
+                    return View(model);
+                }
+
+                if(model.DataCheckin >= model.DataCheckout)
+                {
+                    ViewData["Erro"] = "Data check-in can't be posterior to Data check-out";
+                    return View(model);
+                }
+
+                var reservasAt = _context.Reservas
+                                        .Where(r => r.ImovelId == model.ImovelId);
+
+                Reserva availableCheckinAt = await reservasAt
+                                        .Where(r => r.DataCheckin >= model.DataCheckin && 
+                                                        r.DataCheckin <= model.DataCheckout)
+                                        .FirstOrDefaultAsync();
+
+                if(availableCheckinAt != null)
+                {
+                    ViewData["Erro"] = "The Check-in Date is unavailable! \n" +
+                        "Check-in Date is available before " + availableCheckinAt.DataCheckin + 
+                        " or after " + availableCheckinAt.DataCheckout;
+                    return View();
+                }
+
+                Reserva availableCheckoutAt = await reservasAt
+                                        .Where(r => r.DataCheckout >= model.DataCheckin &&
+                                        r.DataCheckout <= model.DataCheckout)
+                                        .FirstOrDefaultAsync();
+
+                if (availableCheckinAt != null)
+                {
+                    ViewData["Erro"] = "The Check-out Date is unavailable! \n" +
+                        "Check-out Date is available before " + availableCheckinAt.DataCheckin + 
+                        " or after " + availableCheckinAt.DataCheckout;
+                    return View();
+                }
+
+                Reserva reserva = new Reserva
+                {
+                    ClienteId = user.Id,
+                    DataCheckin = model.DataCheckin,
+                    DataCheckout = model.DataCheckout,
+                    Confirmado = model.Confirmado,
+                    ImovelId = model.ImovelId,
+                };
+
                 _context.Add(reserva);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
-            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
-            return View(reserva);
+
+            return View(model);
         }
 
         // GET: Reserva/Edit/5
@@ -91,13 +157,16 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
-            var reserva = await _context.Reservas.FindAsync(id);
+            var reserva = await _context.Reservas
+                                .Include(r => r.Cliente)
+                                .Include(r => r.Imovel)
+                                .Where(r => r.Id == id)
+                                .FirstAsync();
             if (reserva == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
+
             return View(reserva);
         }
 
@@ -133,41 +202,41 @@ namespace MyAirbnb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
+            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
+            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
             return View(reserva);
         }
 
-        // GET: Reserva/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Reserva/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var reserva = await _context.Reservas
-                .Include(r => r.Cliente)
-                .Include(r => r.Imovel)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (reserva == null)
-            {
-                return NotFound();
-            }
+        //    var reserva = await _context.Reservas
+        //        .Include(r => r.Cliente)
+        //        .Include(r => r.Imovel)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (reserva == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(reserva);
-        }
+        //    return View(reserva);
+        //}
 
-        // POST: Reserva/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var reserva = await _context.Reservas.FindAsync(id);
-            _context.Reservas.Remove(reserva);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Reserva/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var reserva = await _context.Reservas.FindAsync(id);
+        //    _context.Reservas.Remove(reserva);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool ReservaExists(int id)
         {

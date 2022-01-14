@@ -1,4 +1,4 @@
-﻿@model MyAirbnb.Models.Reserva
+﻿@model CreateReservaViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -6,37 +6,33 @@
 
 <h1>Create</h1>
 
-<h4>Reservation for @ViewBag.ImovelNome</h4>
+<h4>Reservation for ImovelNome</h4>
 <hr />
+
+@if(ViewBag.Erro != null)
+{
+    <p class="text-danger">
+        @ViewBag.Erro
+    </p>
+}
 <div class="row">
+
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="DataCheckin" class="control-label"></label>
-                <input asp-for="DataCheckin" class="form-control" />
+                <input asp-for="DataCheckin" class="form-control"/>
                 <span asp-validation-for="DataCheckin" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DataCheckout" class="control-label"></label>
-                <input asp-for="DataCheckout" class="form-control" />
+                <input asp-for="DataCheckout" class="form-control"/>
                 <span asp-validation-for="DataCheckout" class="text-danger"></span>
             </div>
-            @*<div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Confirmado" /> @Html.DisplayNameFor(model => model.Confirmado)
-                </label>
-            </div>*@
-            @*<div class="form-group">
-                <label asp-for="ImovelId" class="control-label"></label>
-                <select asp-for="ImovelId" class ="form-control" asp-items="ViewBag.ImovelId"></select>
-            </div>*@
-            @*<div class="form-group">
-                <label asp-for="ClienteId" class="control-label"></label>
-                <select asp-for="ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
-            </div>*@
+            <input asp-for="ImovelId" type="hidden" class ="form-control"/>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Reserve" class="btn btn-primary" />
             </div>
         </form>
     </div>
