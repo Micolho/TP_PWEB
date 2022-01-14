@@ -5,17 +5,25 @@
 }
 
 <h1>Details</h1>
-
 <div>
-    <h4>Imovel</h4>
-        @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit | </a>
-        }
-        <a asp-action="Index">Back to List</a>
-        <a class="btn btn-primary" style="float:right" asp-controller="Reserva" asp-action="Create" asp-route-id="@Model.Id" >Reservar</a>
+    @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit | </a>
+    }
+    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" style="float:right" asp-controller="Reserva" asp-action="Create" asp-route-id="@Model.Id" >Reservar</a>
 </div>
 <hr />
+
+<div>
+    @foreach(var img in @Model.Imagens)
+    {
+        <img src=img.FilePath class="img-thumbnail float-left" style="max-height:auto">
+    }
+</div>
+
+<hr/>
+
 <div>
     <dl class="row">
         <dt class = "col-sm-2">

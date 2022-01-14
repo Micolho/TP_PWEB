@@ -49,9 +49,9 @@
 
 @foreach(var img in Model)
 {
-    <img src="@Url.Content(@img.FilePath)" alt="Imagem">
-    @*<asp:Image ImageUrl="../wwwroot/Files/Screenshot_1.png" runat="server" />*@
+    <img src=@img.FilePath class="img-thumbnail float-left" style="max-height:200px">
 }
+
 
 @*Different upload button types:*@
 @*<form method="post" enctype="multipart/form-data">
