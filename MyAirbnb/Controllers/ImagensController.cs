@@ -15,10 +15,19 @@ namespace MyAirbnb.Controllers
     public class ImagensController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly string relativeBasePath = Path.Combine(
+                    Path.DirectorySeparatorChar + "Imagens" + Path.DirectorySeparatorChar
+            );  //  => /Imagens/
+        private readonly string canonicalBasePath;
 
         public ImagensController(ApplicationDbContext context)
         {
             _context = context;
+            canonicalBasePath = Path.Combine(
+                Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "wwwroot" + relativeBasePath
+                );  //  => ~/wwwroot/Imagens/
+            if (!Directory.Exists(canonicalBasePath))
+                Directory.CreateDirectory(canonicalBasePath);
         }
 
         [HttpPost]
@@ -30,14 +39,7 @@ namespace MyAirbnb.Controllers
             //}
             foreach (var file in files)
             {
-                var basePath = Path.Combine(Directory.GetCurrentDirectory() +
-                    Path.DirectorySeparatorChar + "wwwroot" + 
-                    Path.DirectorySeparatorChar + "Files" + Path.DirectorySeparatorChar);
-
-                if (!Directory.Exists(basePath))
-                    Directory.CreateDirectory(basePath);
-
-                var filePath = Path.Combine(basePath, file.FileName);
+                var filePath = Path.Combine(canonicalBasePath, file.FileName);
                 if (!System.IO.File.Exists(filePath))
                 {
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -46,7 +48,7 @@ namespace MyAirbnb.Controllers
                     }
                     var model = new Imagens()
                     {
-                        FilePath = filePath
+                        FilePath = Path.Combine(relativeBasePath, file.FileName),   //=> /Imagens/file.png
                     };
                     _context.Imagens.Add(model);
                     _context.SaveChanges();
