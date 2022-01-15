@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyAirbnb.Models.Reserva>
+﻿@model IEnumerable<MyAirbnb.Models.DoneChecklist>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DataCheckin)
+                @Html.DisplayNameFor(model => model.Observacoes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DataCheckout)
+                @Html.DisplayNameFor(model => model.Checklist)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Confirmado)
+                @Html.DisplayNameFor(model => model.Reserva)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imovel)
+                @Html.DisplayNameFor(model => model.Responsavel)
             </th>
             <th></th>
         </tr>
@@ -31,16 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.DataCheckin)
+                @Html.DisplayFor(modelItem => item.Observacoes)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DataCheckout)
+                @Html.DisplayFor(modelItem => item.Checklist.Descricao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Confirmado)
+                @Html.DisplayFor(modelItem => item.Reserva.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imovel.Nome)
+                @Html.DisplayFor(modelItem => item.Responsavel.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

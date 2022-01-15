@@ -27,11 +27,27 @@ namespace MyAirbnb.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            var applicationDbContext = _context.Reservas
+            List<Reserva> ListaReservas;
+
+            if (User.IsInRole("Cliente"))
+            {
+                user = await _userManager.GetUserAsync(User);
+                ListaReservas = await _context.Reservas
+                                            .Include(r => r.Cliente)
+                                            .Include(r => r.Imovel)
+                                            .Where(r => r.ClienteId == user.Id)
+                                            .OrderBy(d => d.DataCheckin)
+                                            .ToListAsync();
+                return View(ListaReservas);
+            }
+
+            ListaReservas = await _context.Reservas
                                         .Include(r => r.Cliente)
                                         .Include(r => r.Imovel)
-                                        .Where(r => r.ClienteId == user.Id);
-            return View(await applicationDbContext.OrderBy(d => d.DataCheckin).ToListAsync());
+                                        .Where(r => r.ClienteId == user.Id)
+                                        .OrderBy(d => d.DataCheckin)
+                                        .ToListAsync();
+            return View(ListaReservas);
         }
 
         // GET: Reserva/Details/5
@@ -108,27 +124,29 @@ namespace MyAirbnb.Controllers
 
                 Reserva availableCheckinAt = await reservasAt
                                         .Where(r => r.DataCheckin >= model.DataCheckin && 
-                                                        r.DataCheckin <= model.DataCheckout)
+                                                     r.DataCheckin <= model.DataCheckout)
+                                        .Where(r => r.Confirmado)
                                         .FirstOrDefaultAsync();
 
                 if(availableCheckinAt != null)
                 {
                     ViewData["Erro"] = "The Check-in Date is unavailable! \n" +
-                        "Check-in Date is available before " + availableCheckinAt.DataCheckin + 
-                        " or after " + availableCheckinAt.DataCheckout;
+                        "Check-in Date is available before " + availableCheckinAt.DataCheckin.ToShortDateString() + 
+                        " or after " + availableCheckinAt.DataCheckout.ToShortDateString();
                     return View();
                 }
 
                 Reserva availableCheckoutAt = await reservasAt
                                         .Where(r => r.DataCheckout >= model.DataCheckin &&
-                                        r.DataCheckout <= model.DataCheckout)
+                                                    r.DataCheckout <= model.DataCheckout)
+                                        .Where(r => r.Confirmado)
                                         .FirstOrDefaultAsync();
 
                 if (availableCheckinAt != null)
                 {
                     ViewData["Erro"] = "The Check-out Date is unavailable! \n" +
-                        "Check-out Date is available before " + availableCheckinAt.DataCheckin + 
-                        " or after " + availableCheckinAt.DataCheckout;
+                        "Check-out Date is available before " + availableCheckinAt.DataCheckin.ToShortDateString() + 
+                        " or after " + availableCheckinAt.DataCheckout.ToShortDateString();
                     return View();
                 }
 
@@ -202,41 +220,8 @@ namespace MyAirbnb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ClienteId"] = new SelectList(_context.Users, "Id", "Id", reserva.ClienteId);
-            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Localidade", reserva.ImovelId);
             return View(reserva);
         }
-
-        //// GET: Reserva/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var reserva = await _context.Reservas
-        //        .Include(r => r.Cliente)
-        //        .Include(r => r.Imovel)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (reserva == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(reserva);
-        //}
-
-        //// POST: Reserva/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var reserva = await _context.Reservas.FindAsync(id);
-        //    _context.Reservas.Remove(reserva);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         private bool ReservaExists(int id)
         {
