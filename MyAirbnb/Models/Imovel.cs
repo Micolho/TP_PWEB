@@ -81,5 +81,8 @@ namespace MyAirbnb.Models
 
         public virtual ApplicationUser Responsavel { get; set; }
 
+        [Required, DefaultValue(false)]
+        public bool Entregue { get; set; }
+
     }
 }

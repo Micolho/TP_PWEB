@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +14,65 @@ namespace MyAirbnb.Controllers
     public class DoneChecklistsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<ApplicationUser> _userManager;
 
-        public DoneChecklistsController(ApplicationDbContext context)
+        public DoneChecklistsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: DoneChecklists
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.DoneChecklists.Include(d => d.Checklist).Include(d => d.Reserva).Include(d => d.Responsavel);
+            var applicationDbContext = _context.DoneChecklists
+                                    .Include(d => d.Checklist)
+                                    .Include(d => d.Reserva)
+                                    .Include(d => d.Responsavel);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> IndexPreparacao(int? id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            //verificar qual o tipo de imovel e as suas checklists 
+            Imovel imovel = await _context.Imoveis.Where(i => i.Id == id && 
+                                                        (i.ResponsavelId == user.Id || 
+                                                         i.DonoId == user.Id))
+                                            .FirstOrDefaultAsync();
+            if (imovel == null)
+                return NotFound();
+
+            var checklists = await _context.Checklists
+                                    .Where(d => d.MomentoPreparacao && 
+                                           d.CategoriaId == imovel.TipoImovelId)
+                                    .ToListAsync();
+            return View(checklists);
+        }
+
+
+        public async Task<IActionResult> IndexEntrega(int? id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            //verificar qual o tipo de imovel e as suas checklists 
+            Imovel imovel = await _context.Imoveis.Where(i => i.Id == id &&
+                                                        (i.ResponsavelId == user.Id ||
+                                                         i.DonoId == user.Id))
+                                            .FirstOrDefaultAsync();
+            if (imovel == null)
+                return NotFound();
+
+            var checklists = await _context.Checklists
+                                    .Where(d => d.MomentoEntrega &&
+                                           d.CategoriaId == imovel.TipoImovelId)
+                                    .ToListAsync();
+            return View(checklists);
         }
 
         // GET: DoneChecklists/Details/5
