@@ -31,12 +31,12 @@ namespace MyAirbnb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(int? id, List<IFormFile> files)
+        public async Task<IActionResult> Upload(int id, bool isImovel, List<IFormFile> files)
         {
-            //if (id == null)
-            //{   // the id of the imovel must be specified
-            //    return NotFound();
-            //}
+            if (id == null)
+            {   // the id of the imovel must be specified
+                return NotFound();
+            }
             foreach (var file in files)
             {
                 var filePath = Path.Combine(canonicalBasePath, file.FileName);
@@ -50,6 +50,11 @@ namespace MyAirbnb.Controllers
                     {
                         FilePath = Path.Combine(relativeBasePath, file.FileName),   //=> /Imagens/file.png
                     };
+                    if (isImovel)
+                        model.ImovelId = id;
+                    else
+                        model.DoneChecklistId = id;
+
                     _context.Imagens.Add(model);
                     _context.SaveChanges();
                 }

@@ -15,13 +15,26 @@
 </div>
 <hr />
 
-<div>
-    @foreach(var img in @Model.Imagens)
+<div style="min-height:100px">
+    <h3 style="margin-bottom:40px">Photos</h3>
+    @foreach (var img in @Model.Imagens)
     {
-        <img src=img.FilePath class="img-thumbnail float-left" style="max-height:auto">
+        <a asp-controller="Imagens" asp-action="Details" asp-route-id="@img.Id">
+            <img src=@img.FilePath class="img-thumbnail float-left" style="max-height:250px;margin:10px">
+        </a>
+    }
+    @if (User.IsInRole("Gestor"))
+    {
+        <div style="float:right">
+        <form method="post" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" style="margin-right:30px" name="files" multiple />
+                <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens" asp-action="Upload" asp-route-id="@Model.Id" asp-route-isImovel="true">Upload</button>
+            </div>
+        </form>
+        </div>
     }
 </div>
-
 <hr/>
 
 <div>

@@ -72,15 +72,19 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
-
+            imovel.Imagens = new List<Imagens>();
             imovel.Classificacao = new List<Classificacao>();
+
+            var imagens = await _context.Imagens
+                .Where(m => m.ImovelId == imovel.Id).ToArrayAsync();
+            if (imagens != null)
+                imovel.Imagens = imagens;
+
             var reviews = await _context.Classificacaos
                 .Where(m => m.ImovelId == imovel.Id).ToArrayAsync();
 
             if (reviews != null)
-            {
                 imovel.Classificacao = reviews;
-            }
 
             return View(imovel);
         }

@@ -9,17 +9,17 @@ namespace MyAirbnb.Models
 
         public string FilePath { get; set; }
 
-/*        [ForeignKey("DoneChecklistId"),]
+        [ForeignKey("DoneChecklistId"),]
         public int? DoneChecklistId { get; set; }
 
-        
+
         public virtual DoneChecklist DoneChecklist { get; set; }
 
         [ForeignKey("ImovelId")]
         public int? ImovelId { get; set; }
 
-        
-        public virtual Imovel Imovel { get; set; }*/
+
+        public virtual Imovel Imovel { get; set; }
 
     }
 }
