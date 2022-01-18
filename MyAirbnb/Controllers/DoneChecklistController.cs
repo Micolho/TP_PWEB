@@ -8,18 +8,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyAirbnb.Data;
 using MyAirbnb.Models;
+using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
-    public class DoneChecklistsController : Controller
+    public class DoneChecklistController : Controller
     {
         private readonly ApplicationDbContext _context;
         private UserManager<ApplicationUser> _userManager;
 
-        public DoneChecklistsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public DoneChecklistController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+        }
+        
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public async Task<IActionResult> IndexPreparacao(int? id)
@@ -33,7 +39,7 @@ namespace MyAirbnb.Controllers
                                             .FirstOrDefaultAsync();
             if (reserva == null)
                 return NotFound();
-
+            ViewData["ReservaId"] = reserva.Id;
             //verificar qual o tipo de imovel e as suas checklists 
             Imovel imovel = await _context.Imoveis.Where(i => i.Id == reserva.ImovelId && 
                                                         (i.ResponsavelId == user.Id || 
@@ -42,10 +48,15 @@ namespace MyAirbnb.Controllers
             if (imovel == null)
                 return NotFound();
 
-            var checklists = await _context.Checklists
-                                    .Where(d => d.MomentoPreparacao && 
-                                           d.CategoriaId == imovel.TipoImovelId)
-                                    .ToListAsync();
+            //var checklists = await _context.DoneChecklists
+            //                        .Where(d => d.MomentoPreparacao &&
+            //                               d.CategoriaId == imovel.TipoImovelId)
+            //                        .ToListAsync(); 
+            var checklists = await _context.DoneChecklists
+                                     .Include(d => d.Checklist)
+                                     .Where(d => d.Checklist.MomentoPreparacao &&
+                                           d.Checklist.CategoriaId == imovel.TipoImovelId)
+                                     .ToListAsync();
             return View(checklists);
         }
 
@@ -62,6 +73,8 @@ namespace MyAirbnb.Controllers
             if (reserva == null)
                 return NotFound();
 
+            ViewData["ReservaId"] = reserva.Id;
+
             //verificar qual o tipo de imovel e as suas checklists 
             Imovel imovel = await _context.Imoveis.Where(i => i.Id == reserva.ImovelId &&
                                                         (i.ResponsavelId == user.Id ||
@@ -70,10 +83,11 @@ namespace MyAirbnb.Controllers
             if (imovel == null)
                 return NotFound();
 
-            var checklists = await _context.Checklists
-                                    .Where(d => d.MomentoEntrega &&
-                                           d.CategoriaId == imovel.TipoImovelId)
-                                    .ToListAsync();
+            var checklists = await _context.DoneChecklists
+                                     .Include(d => d.Checklist)
+                                     .Where(d => d.Checklist.MomentoEntrega &&
+                                           d.Checklist.CategoriaId == imovel.TipoImovelId)
+                                     .ToListAsync();
             return View(checklists);
         }
 
@@ -99,12 +113,34 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: DoneChecklists/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int reservaId, bool IsPreparacao)
         {
-            ViewData["ChecklistId"] = new SelectList(_context.Checklists, "Id", "Descricao");
-            ViewData["ReservaId"] = new SelectList(_context.Reservas, "Id", "Id");
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var reserva = await _context.Reservas.Where(r => r.Id == reservaId)
+                                                 .Include(r => r.Imovel)
+                                                 .FirstOrDefaultAsync();
+            if (reserva == null)
+                return NotFound();
+
+            List<Checklist> checklists = null;
+
+            if (IsPreparacao)
+                checklists = await _context.Checklists.Where(c => c.CategoriaId == reserva.Imovel.TipoImovelId
+                                                             && c.MomentoPreparacao)
+                                                       .ToListAsync();
+            else
+                checklists = await _context.Checklists.Where(c => c.CategoriaId == reserva.Imovel.TipoImovelId
+                                                             && c.MomentoEntrega)
+                                                       .ToListAsync();
+
+            CreateDoneChecklistViewModel model = new CreateDoneChecklistViewModel
+            {
+                IsPreparacao = IsPreparacao,
+                ReservaId = reservaId,
+            };
+
+            ViewData["ChecklistId"] = new SelectList(checklists, "Id", "Descricao");
+
+            return View(model);
         }
 
         // POST: DoneChecklists/Create
@@ -112,91 +148,47 @@ namespace MyAirbnb.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Observacoes,ChecklistId,ReservaId,ResponsavelId")] DoneChecklist doneChecklist)
+        public async Task<IActionResult> Create(CreateDoneChecklistViewModel model)
         {
+
+            var user = await _userManager.GetUserAsync(User);
+
             if (ModelState.IsValid)
             {
+                DoneChecklist doneChecklist = new DoneChecklist
+                {
+                    Observacoes = model.Observacoes,
+                    ChecklistId = model.ChecklistId,
+                    ReservaId = model.ReservaId,
+                    ResponsavelId = user.Id,
+                };
                 _context.Add(doneChecklist);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ChecklistId"] = new SelectList(_context.Checklists, "Id", "Descricao", doneChecklist.ChecklistId);
-            ViewData["ReservaId"] = new SelectList(_context.Reservas, "Id", "Id", doneChecklist.ReservaId);
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id", doneChecklist.ResponsavelId);
-            return View(doneChecklist);
-        }
+                if(model.IsPreparacao)
+                    return RedirectToAction(nameof(IndexPreparacao));
 
-        // GET: DoneChecklists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
+                return RedirectToAction(nameof(IndexEntrega));
+            }
+
+            var reserva = await _context.Reservas.Where(r => r.Id == model.ReservaId)
+                                                   .Include(r => r.Imovel)
+                                                   .FirstOrDefaultAsync();
+            if (reserva == null)
                 return NotFound();
-            }
 
-            var doneChecklist = await _context.DoneChecklists.FindAsync(id);
-            if (doneChecklist == null)
-            {
-                return NotFound();
-            }
-            ViewData["ChecklistId"] = new SelectList(_context.Checklists, "Id", "Descricao", doneChecklist.ChecklistId);
-            ViewData["ReservaId"] = new SelectList(_context.Reservas, "Id", "Id", doneChecklist.ReservaId);
-            ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id", doneChecklist.ResponsavelId);
-            return View(doneChecklist);
-        }
+            List<Checklist> checklists = null;
 
-        // POST: DoneChecklists/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,Observacoes,ChecklistId,ReservaId,ResponsavelId")] DoneChecklist doneChecklist)
-        //{
-        //    if (id != doneChecklist.Id)
-        //    {
-        //        return NotFound();
-        //    }
+            if (model.IsPreparacao)
+                checklists = await _context.Checklists.Where(c => c.CategoriaId == reserva.Imovel.TipoImovelId
+                                                             && c.MomentoPreparacao)
+                                                       .ToListAsync();
+            else
+                checklists = await _context.Checklists.Where(c => c.CategoriaId == reserva.Imovel.TipoImovelId
+                                                             && c.MomentoEntrega)
+                                                       .ToListAsync();
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(doneChecklist);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!DoneChecklistExists(doneChecklist.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ChecklistId"] = new SelectList(_context.Checklists, "Id", "Descricao", doneChecklist.ChecklistId);
-        //    ViewData["ReservaId"] = new SelectList(_context.Reservas, "Id", "Id", doneChecklist.ReservaId);
-        //    ViewData["ResponsavelId"] = new SelectList(_context.Users, "Id", "Id", doneChecklist.ResponsavelId);
-        //    return View(doneChecklist);
-        //}
-
-        // POST: DoneChecklists/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var doneChecklist = await _context.DoneChecklists.FindAsync(id);
-            _context.DoneChecklists.Remove(doneChecklist);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool DoneChecklistExists(int id)
-        {
-            return _context.DoneChecklists.Any(e => e.Id == id);
+            ViewData["ChecklistId"] = new SelectList(checklists, "Id", "Descricao");
+            return View();
         }
     }
 }

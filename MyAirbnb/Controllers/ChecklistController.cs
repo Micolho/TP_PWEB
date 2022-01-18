@@ -69,8 +69,13 @@ namespace MyAirbnb.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(!model.MomentoPreparacao || !model.MomentoEntrega)
-                    return RedirectToAction(nameof(Index));
+                if(!model.MomentoPreparacao && !model.MomentoEntrega)
+                {
+                    ViewData["Erro"] = "You need to choose at least one of the moments!";
+                    ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
+                    return View();
+                }
+                    
                 //get user
                 var user = await _userManager.GetUserAsync(User);
                 var userID = user.Id;

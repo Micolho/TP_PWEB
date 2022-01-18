@@ -218,7 +218,7 @@ namespace MyAirbnb.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(reserva);
         }

@@ -50,7 +50,7 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Aceitar Reserva</a> |
-    <a asp-action="Preparar" asp-route-id="@Model.Id">Preparar Reserva</a> |
-    <a asp-action="Entregar" asp-route-id="@Model.Id">Entregar Reserva</a> |
+    <a asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Preparar Reserva</a> |
+    <a asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Entregar Reserva</a> |
     <a asp-action="Index">Back to List</a>
 </div>

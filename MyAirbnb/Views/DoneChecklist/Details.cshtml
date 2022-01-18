@@ -26,17 +26,15 @@
             @Html.DisplayNameFor(model => model.Reserva)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Reserva.Id)
+            <a asp-controller="Reserva" asp-action="Details" asp-route-id="@Model.Reserva.Id"> 
+                @Html.DisplayFor(model => model.Reserva.Id)
+            </a>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Responsavel)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Responsavel.Id)
+            @Html.DisplayFor(model => model.Responsavel.Nome)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>

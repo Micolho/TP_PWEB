@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-IsPreparacao="true"  asp-route-reservaId="@ViewBag.ReservaId">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -16,13 +16,7 @@
                 @Html.DisplayNameFor(model => model.Observacoes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Checklist)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reserva)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Responsavel)
+                @Html.DisplayNameFor(model => model.Checklist.Descricao)
             </th>
             <th></th>
         </tr>
@@ -37,15 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Checklist.Descricao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Reserva.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Responsavel.Nome)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
 }

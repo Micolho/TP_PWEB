@@ -8,6 +8,12 @@
 
 <h4>Checklist</h4>
 <hr />
+
+@if(ViewBag.Erro != null)
+{
+    <span asp-validation-for="Descricao" class="text-danger">@ViewBag.Erro</span>
+}
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
