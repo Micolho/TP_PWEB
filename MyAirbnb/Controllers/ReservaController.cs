@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyAirbnb.Data;
 using MyAirbnb.Models;
@@ -44,7 +43,7 @@ namespace MyAirbnb.Controllers
             ListaReservas = await _context.Reservas
                                         .Include(r => r.Cliente)
                                         .Include(r => r.Imovel)
-                                        .Where(r => r.ClienteId == user.Id)
+                                        .Where(r => r.Imovel.DonoId == user.Id || r.Imovel.ResponsavelId == user.Id)
                                         .OrderBy(d => d.DataCheckin)
                                         .ToListAsync();
             return View(ListaReservas);
