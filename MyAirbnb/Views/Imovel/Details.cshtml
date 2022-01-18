@@ -200,19 +200,20 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in @Model.Classificacao) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Utilizador.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estrelas)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentario)
-            </td>
-        </tr>
-}
+        @foreach (var item in @Model.Classificacao)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Utilizador.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estrelas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comentario)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 </div>

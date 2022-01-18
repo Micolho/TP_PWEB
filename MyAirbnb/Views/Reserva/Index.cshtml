@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<MyAirbnb.Models.Reserva>
 
 @{
-    ViewData["Title"] = "My Reservations";
+    ViewData["Title"] = "Reservations";
 }
 
-<h1>My Reservations</h1>
+<h1>@ViewData["Title"]</h1>
 
 @*<p>
     <a asp-action="Create">Create New</a>
 </p>*@
-<table class="table">
+<table class="table" style="margin-top:50px">
     <thead>
         <tr>
             <th>

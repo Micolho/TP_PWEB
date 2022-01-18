@@ -10,7 +10,7 @@
 
 @if (User.IsInRole("Gestor") || User.IsInRole("Admins"))
 {
-    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Cancel</a>
+    @*<a class="btn btn-primary" asp-action="Index">Cancel</a>*@
     <a class="btn btn-danger" asp-action="Delete" asp-route-id=@Model.Id method="post">Delete</a>
 }
 

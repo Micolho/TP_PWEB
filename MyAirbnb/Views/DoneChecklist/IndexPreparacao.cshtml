@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<MyAirbnb.Models.DoneChecklist>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Property Preparation";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a class="btn btn-primary btn-sm" asp-action="Create" asp-route-IsPreparacao="true"  asp-route-reservaId="@ViewBag.ReservaId">Create New</a>

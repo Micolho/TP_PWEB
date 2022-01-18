@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<MyAirbnb.Models.Imovel>
 
 @{
-    ViewData["Title"] = "Properties";
+    ViewData["Title"] = "My Properties";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 @if (User.IsInRole("Gestor") || User.IsInRole("Admins"))
 {
