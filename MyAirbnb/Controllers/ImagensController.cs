@@ -103,10 +103,17 @@ namespace MyAirbnb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            
             var file = await _context.Imagens.FirstOrDefaultAsync(x => x.Id == id);
+            
             if (file == null)
                 return NotFound();
-            if (System.IO.File.Exists(file.FilePath))
+
+            file.FilePath = file.FilePath.Replace("/Imagens/","");
+
+            var filePath = Path.Combine(canonicalBasePath, file.FilePath);
+
+            if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(file.FilePath);
             }
