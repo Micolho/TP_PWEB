@@ -32,7 +32,7 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Imovel"
-                                asp-action="Index">Imovel</a>
+                                asp-action="Index">Properties</a>
                             </li>
 
                             @if (User.IsInRole("Admins"))
@@ -61,6 +61,10 @@
                             @if (User.IsInRole("Gestor"))
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Imovel"
+                                    asp-action="MyIndex">My Properties</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" asp-controller="Empresa"
                                     asp-action="Index">My company</a>
                                 </li>
@@ -73,13 +77,6 @@
                                     asp-action="Index">Reservations</a>
                                 </li>
                             }
-                            @*@if (User.IsInRole("Cliente"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller=""
-                                    asp-action="">Your History</a>
-                                </li>
-                            }*@
 
                     </ul>
                 </div>

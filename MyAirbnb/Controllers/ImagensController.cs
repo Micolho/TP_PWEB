@@ -61,7 +61,12 @@ namespace MyAirbnb.Controllers
                     _context.SaveChanges();
                 }
             }
-            return RedirectToAction("Index");
+            var thisId = id;
+            //return RedirectToAction("Index");
+            if(isImovel)
+                return RedirectToAction("Details", "Imovel", new {id = thisId });
+            else
+                return RedirectToAction("Details", "DoneChecklist", new { id = thisId });
         }
 
         // GET: Imagens
