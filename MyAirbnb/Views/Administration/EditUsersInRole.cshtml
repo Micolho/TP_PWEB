@@ -11,10 +11,10 @@
                 {
                     <div class="form-group">
                         <input type="hidden" asp-for="@Model[i].UserId" />
-                        <input type="hidden" asp-for="@Model[i].UserName" />
+                        <input type="hidden" asp-for="@Model[i].Email" />
 
                         <input asp-for="@Model[i].IsSelected" class="form-check-input">
-                        <label asp-for="@Model[i].IsSelected" class="form-check-label"> @Model[i].UserName</label>
+                        <label asp-for="@Model[i].IsSelected" class="form-check-label"> @Model[i].Email</label>
                     </div>
                 }
 

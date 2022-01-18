@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyAirbnb.Models;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MyAirbnb.Controllers
 {
+    [Authorize(Roles = "Admins")]
     public class AdministrationController : Controller
     {
         private RoleManager<IdentityRole> _roleManager;
@@ -65,7 +67,7 @@ namespace MyAirbnb.Controllers
 
             if(role == null)
             {
-                NotFound();
+                return NotFound();
             }
 
             var model = new EditRoleViewModel
@@ -79,7 +81,7 @@ namespace MyAirbnb.Controllers
             {
                 if( await _userManager.IsInRoleAsync(user, role.Name))
                 {
-                    model.Users.Add(user.UserName);
+                    model.Users.Add(user.Nome);
                 }
             }
             
@@ -107,7 +109,7 @@ namespace MyAirbnb.Controllers
                 UserRoleViewModel userRoleViewModel = new UserRoleViewModel
                 {
                     UserId = user.Id,
-                    UserName = user.Nome
+                    Email = user.Email
                 };
 
                 if(await _userManager.IsInRoleAsync(user, role.Name))
