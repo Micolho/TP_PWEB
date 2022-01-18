@@ -6,22 +6,7 @@
 
 <h1>@ViewBag.Title</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<form method="post" enctype="multipart/form-data">
-    <div class="input-group mb-3">
-        <div>
-            <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" style="margin-right:30px" name="files" id="inputFile" multiple />
-        </div>
-        <div>
-            <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens" asp-action="Upload">Upload</button>
-        </div>
-    </div>
-</form>
-
-<table class="table">
+<table class="table" style="margin-bottom:100px">
     <thead>
         <tr>
             <th>
@@ -34,7 +19,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                <a asp-action="Details" asp-route-id="@item.Id">
                 @Html.DisplayFor(modelItem => item.FilePath)
+                </a>
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
@@ -45,12 +32,16 @@
     </tbody>
 </table>
 
-<hr/>
 
 @foreach(var img in Model)
 {
+    <a asp-action="Details" asp-route-id="@img.Id">
     <img src=@img.FilePath class="img-thumbnail float-left" style="max-height:200px">
+    </a>
 }
+
+
+
 
 
 @*Different upload button types:*@

@@ -36,8 +36,10 @@
         </a>
     </div>
 </div>
+
+@*Display upload button:*@
 <div class="row">
-    @if (User.IsInRole("Gestor"))
+    @if (User.IsInRole("Gestor") || User.IsInRole("Admins"))
     {
         <form method="post" enctype="multipart/form-data">
             <div class="input-group mb-3">

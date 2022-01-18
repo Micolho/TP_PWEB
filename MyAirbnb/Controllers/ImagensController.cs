@@ -33,6 +33,10 @@ namespace MyAirbnb.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(int id, bool isImovel, List<IFormFile> files)
         {
+            //if (id == null)
+            //{   // the id of the imovel must be specified
+            //    return NotFound();
+            //}
             foreach (var file in files)
             {
                 var filePath = Path.Combine(canonicalBasePath, file.FileName);
@@ -58,22 +62,6 @@ namespace MyAirbnb.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var file = await _context.Imagens.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (file == null)
-                return null;
-            if (System.IO.File.Exists(file.FilePath))
-            {
-                System.IO.File.Delete(file.FilePath);
-            }
-            _context.Imagens.Remove(file);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
         // GET: Imagens
         public async Task<IActionResult> Index()
         {
@@ -91,6 +79,40 @@ namespace MyAirbnb.Controllers
             }
 
             return View(imagens);
+        }
+
+        // GET: Imagens/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var imagens = await _context.Imagens
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (imagens == null)
+            {
+                return NotFound();
+            }
+
+            return View(imagens);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var file = await _context.Imagens.FirstOrDefaultAsync(x => x.Id == id);
+            if (file == null)
+                return NotFound();
+            if (System.IO.File.Exists(file.FilePath))
+            {
+                System.IO.File.Delete(file.FilePath);
+            }
+            _context.Imagens.Remove(file);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Imagens/Create
@@ -165,24 +187,6 @@ namespace MyAirbnb.Controllers
         //    }
         //    return View(imagens);
         //}
-
-        // GET: Imagens/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var imagens = await _context.Imagens
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imagens == null)
-            {
-                return NotFound();
-            }
-
-            return View(imagens);
-        }
 
         // POST: Imagens/Delete/5
         //[HttpPost, ActionName("Delete")]
