@@ -41,18 +41,7 @@
 
 <hr/>
 
-<div class="row">
-    @if (User.IsInRole("Gestor") || User.IsInRole("Funcionario"))
-    {
-        <form method="post" enctype="multipart/form-data">
-            <div class="input-group mb-3">
-                <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" style="margin-right:30px" name="files" multiple />
-                <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens"
-                asp-action="Upload" asp-route-id="@Model.Id" asp-route-isImovel="false">Upload</button>
-            </div>
-        </form>
-    }
-</div>
+<h3 style="margin-bottom:30px">Photos</h3>
 
 <div class="row">
     @*<h3 style="margin-bottom:40px">Photos</h3>*@
@@ -85,4 +74,17 @@
             @*<span class="sr-only">Next</span>*@
         </a>
     </div>
+</div>
+
+<div class="row">
+    @if (User.IsInRole("Gestor") || User.IsInRole("Funcionario") || User.IsInRole("Admins"))
+    {
+        <form method="post" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <input type="file" accept="image/png,image/jpeg" class="btn btn-outline-secondary" style="margin-right:30px" name="files" multiple />
+                <button type="submit" class="input-group-append btn btn-primary" asp-controller="Imagens"
+                asp-action="Upload" asp-route-id="@Model.Id" asp-route-isImovel="false">Upload</button>
+            </div>
+        </form>
+    }
 </div>
