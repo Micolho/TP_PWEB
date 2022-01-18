@@ -159,7 +159,7 @@ namespace MyAirbnb.Controllers
                 UserRoleViewModel userRoleViewModel = new UserRoleViewModel
                 {
                     UserId = user.Id,
-                    UserName = user.Nome
+                    Email = user.Email
                 };
 
                 if(await _userManager.IsInRoleAsync(user, "Funcionario"))
