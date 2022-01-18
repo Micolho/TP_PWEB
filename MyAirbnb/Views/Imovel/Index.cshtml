@@ -9,7 +9,7 @@
 @if (User.IsInRole("Gestor") || User.IsInRole("Admins"))
 {
     <p>
-        <a asp-action="Create">Create New</a>
+        <a class="btn btn-primary btn-sm" asp-action="Create">Create New</a>
     </p>
 }
 
@@ -136,7 +136,7 @@
                 </td>
             }
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn alert-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
             </td>
         </tr>
 }

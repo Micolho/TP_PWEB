@@ -107,7 +107,7 @@ namespace MyAirbnb.Controllers
             doneChecklist.Imagens = new List<Imagens>();
 
             var imagens = await _context.Imagens
-                .Where(m => m.ImovelId == doneChecklist.Id).ToArrayAsync();
+                .Where(m => m.DoneChecklistId == doneChecklist.Id).ToListAsync();
             if (imagens != null)
                 doneChecklist.Imagens = imagens;
 

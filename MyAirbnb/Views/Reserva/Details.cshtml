@@ -49,8 +49,18 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Aceitar Reserva</a> |
-    <a asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Preparar Reserva</a> |
-    <a asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Entregar Reserva</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
+    {
+        @if (Model.Confirmado)
+        {
+            <a class="btn btn-success disabled" asp-action="Edit" asp-route-id="@Model.Id">Aceitar Reserva</a>
+        }
+        else
+        {
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Aceitar Reserva</a>
+        }
+    <a class="btn btn-primary" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Preparar Reserva</a>
+    <a class="btn btn-warning" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Entregar Reserva</a>
+    }
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>
