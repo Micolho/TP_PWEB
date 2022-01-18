@@ -57,10 +57,14 @@
         }
         else
         {
-            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Aceitar Reserva</a>
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Accept Reservation</a>
         }
-    <a class="btn btn-primary" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Preparar Reserva</a>
-    <a class="btn btn-warning" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Entregar Reserva</a>
+    <a class="btn btn-primary" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Prepare Reservation</a>
+    <a class="btn btn-warning" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Deliver Reservation</a>
+    }
+    @if (User.IsInRole("Cliente"))
+    {
+        <a class="btn btn-primary" asp-action="Create" asp-controller="Classificacao" asp-route-id="@Model.ImovelId">Write a Review</a>
     }
     <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>
