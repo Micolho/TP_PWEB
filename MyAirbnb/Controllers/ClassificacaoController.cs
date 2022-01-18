@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ namespace MyAirbnb.Controllers
     public class ClassificacaoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<ApplicationUser> _userManager;
 
-        public ClassificacaoController(ApplicationDbContext context)
+        public ClassificacaoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Classificacao
@@ -49,11 +52,25 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Classificacao/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int id)
         {
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id");
-            ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var imovel = await _context.Imoveis.FindAsync(id);
+
+            if (imovel == null)
+                return NotFound();
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return NotFound();
+
+            Classificacao classificacao = new Classificacao()
+            {
+                ImovelId = imovel.Id,
+                UtilizadorId = user.Id,
+            };
+            
+            return View(classificacao);
         }
 
         // POST: Classificacao/Create
@@ -69,8 +86,8 @@ namespace MyAirbnb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id", classificacao.ImovelId);
-            ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id", classificacao.UtilizadorId);
+            //ViewData["ImovelId"] = new SelectList(_context.Imoveis, "Id", "Id", classificacao.ImovelId);
+            //ViewData["UtilizadorId"] = new SelectList(_context.Users, "Id", "Id", classificacao.UtilizadorId);
             return View(classificacao);
         }
 
