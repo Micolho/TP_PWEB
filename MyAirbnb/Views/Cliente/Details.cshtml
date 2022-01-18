@@ -5,7 +5,9 @@
 }
 
 <h1>Details</h1>
-
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 <div>
     <h4>Clientes</h4>
     <hr />
@@ -54,11 +56,6 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.cliente.Id">Edit</a>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 <div>
     <h5>Reviews</h5>
 

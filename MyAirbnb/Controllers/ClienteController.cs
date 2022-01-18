@@ -39,13 +39,8 @@ namespace MyAirbnb.Controllers
             return View(listOfClients);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var cliente = await _context.Users.FindAsync(id);
 
             if (cliente == null)

@@ -22,11 +22,6 @@ namespace MyAirbnb.Controllers
             _context = context;
             _userManager = userManager;
         }
-        
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         public async Task<IActionResult> IndexPreparacao(int? id)
         {
@@ -109,6 +104,13 @@ namespace MyAirbnb.Controllers
                 return NotFound();
             }
 
+            doneChecklist.Imagens = new List<Imagens>();
+
+            var imagens = await _context.Imagens
+                .Where(m => m.ImovelId == doneChecklist.Id).ToArrayAsync();
+            if (imagens != null)
+                doneChecklist.Imagens = imagens;
+
             return View(doneChecklist);
         }
 
@@ -165,9 +167,9 @@ namespace MyAirbnb.Controllers
                 _context.Add(doneChecklist);
                 await _context.SaveChangesAsync();
                 if(model.IsPreparacao)
-                    return RedirectToAction(nameof(IndexPreparacao));
+                    return RedirectToAction(nameof(IndexPreparacao), new {Id = model.ReservaId });
 
-                return RedirectToAction(nameof(IndexEntrega));
+                return RedirectToAction(nameof(IndexEntrega), new { Id = model.ReservaId });
             }
 
             var reserva = await _context.Reservas.Where(r => r.Id == model.ReservaId)

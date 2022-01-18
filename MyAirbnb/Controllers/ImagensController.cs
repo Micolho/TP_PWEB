@@ -33,10 +33,6 @@ namespace MyAirbnb.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(int id, bool isImovel, List<IFormFile> files)
         {
-            if (id == null)
-            {   // the id of the imovel must be specified
-                return NotFound();
-            }
             foreach (var file in files)
             {
                 var filePath = Path.Combine(canonicalBasePath, file.FileName);
