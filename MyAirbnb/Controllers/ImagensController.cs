@@ -37,9 +37,11 @@ namespace MyAirbnb.Controllers
             //{   // the id of the imovel must be specified
             //    return NotFound();
             //}
+            
             foreach (var file in files)
             {
-                var filePath = Path.Combine(canonicalBasePath, file.FileName);
+                var filename = DateTime.Now.Ticks/TimeSpan.TicksPerMillisecond + "_" + file.FileName;
+                var filePath = Path.Combine(canonicalBasePath, filename);
                 if (!System.IO.File.Exists(filePath))
                 {
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -48,7 +50,7 @@ namespace MyAirbnb.Controllers
                     }
                     var model = new Imagens()
                     {
-                        FilePath = Path.Combine(relativeBasePath, file.FileName),   //=> /Imagens/file.png
+                        FilePath = Path.Combine(relativeBasePath, filename),   //=> /Imagens/file.png
                     };
                     if (isImovel)
                         model.ImovelId = id;
