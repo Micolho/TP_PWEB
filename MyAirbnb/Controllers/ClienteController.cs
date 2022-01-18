@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyAirbnb.Data;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MyAirbnb.Controllers
 {
+    [Authorize(Roles = "Admins, Gestor, Funcionario")]
     public class ClienteController : Controller
     {
         private readonly ApplicationDbContext _context;

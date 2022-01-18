@@ -84,6 +84,10 @@ namespace MyAirbnb.Areas.Identity.Pages.Account
 
             [Display(Name = "Manager Role")]
             public bool Gestor { get; set; }
+            [Display(Name = "Funcionario Role")]
+            public bool Funcionario { get; set; }
+            [Display(Name = "Admin Role")]
+            public bool Admin { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -119,6 +123,14 @@ namespace MyAirbnb.Areas.Identity.Pages.Account
                     {
                         //TODO: CHANGE THIS DEFAULT ROLE
                         await _userManager.AddToRoleAsync(user, "Gestor");
+                    }
+                    else if(Input.Funcionario)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Funcionario");
+                    }
+                    else if(Input.Admin)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admins");
                     }
                     else
                     {

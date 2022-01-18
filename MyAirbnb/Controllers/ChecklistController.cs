@@ -13,7 +13,7 @@ using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
-    [Authorize(Roles = "Admins, Gestor")]
+    [Authorize(Roles = "Gestor")]
     public class ChecklistController : Controller
     {
         private readonly ApplicationDbContext _context;

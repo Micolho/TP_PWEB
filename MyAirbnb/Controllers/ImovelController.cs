@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,6 +35,7 @@ namespace MyAirbnb.Controllers
         }
 
         //TODO: CRIAR VISTA PARA ESTA ACTION
+        [Authorize(Roles = "Gestor, Funcionario")]
         public async Task<IActionResult> MyIndex()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -90,6 +92,7 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Imovel/Create
+        [Authorize(Roles = "Gestor")]
         public async Task<IActionResult> Create()
         {
             //get user enterprise
@@ -117,6 +120,7 @@ namespace MyAirbnb.Controllers
         // POST: Imovel/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Gestor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateImovelViewModel  model)
@@ -179,6 +183,7 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Imovel/Edit/5
+        [Authorize(Roles = "Gestor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -245,6 +250,7 @@ namespace MyAirbnb.Controllers
         // POST: Imovel/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Gestor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, CreateImovelViewModel model)

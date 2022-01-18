@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
+    [Authorize]
     public class ReservaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -96,6 +98,7 @@ namespace MyAirbnb.Controllers
         // POST: Reserva/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateReservaViewModel model)
@@ -166,6 +169,7 @@ namespace MyAirbnb.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Funcionario, Gestor ,Admins")]
         // GET: Reserva/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -190,6 +194,7 @@ namespace MyAirbnb.Controllers
         // POST: Reserva/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Funcionario, Gestor ,Admins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DataCheckin,DataCheckout,Confirmado,ImovelId,ClienteId")] Reserva reserva)

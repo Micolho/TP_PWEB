@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using MyAirbnb.Models;
 
 namespace MyAirbnb.Controllers
 {
+    [Authorize(Roles = "Funcionario ,Gestor, Admin")]
     public class ImagensController : Controller
     {
         private readonly ApplicationDbContext _context;

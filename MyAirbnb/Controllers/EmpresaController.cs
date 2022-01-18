@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using MyAirbnb.ViewModels;
 
 namespace MyAirbnb.Controllers
 {
+    [Authorize(Roles = "Admins, Gestor")]
     public class EmpresaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -169,15 +171,16 @@ namespace MyAirbnb.Controllers
                     {
                         userRoleViewModel.IsSelected = true;
                     }
+                    //se nao esta nesta empresa e esta desempregado
+                    else if(user.EmpresaId == null)
+                    {
+                        userRoleViewModel.IsSelected = false;
+
+                    }
                     else
                     {
                         continue;
                     }
-                }
-                else if(await _userManager.IsInRoleAsync(user, "Cliente"))
-                {
-                    userRoleViewModel.IsSelected = false;
-
                 }
                 else
                 {
@@ -198,11 +201,11 @@ namespace MyAirbnb.Controllers
                 if (user == null)
                     continue;
 
-                IdentityResult result = null;
+                //IdentityResult result = null;
 
-                bool IsInRole = await _userManager.IsInRoleAsync(user, "Funcionario");
+                //bool IsInRole = await _userManager.IsInRoleAsync(user, "Funcionario");
 
-                if(model[i].IsSelected && !(IsInRole))
+                if(model[i].IsSelected)
                 {
 
                     user.EmpresaId = int.Parse(id);
@@ -215,10 +218,10 @@ namespace MyAirbnb.Controllers
                         return NotFound();
                     }
 
-                    result = await _userManager.AddToRoleAsync(user, "Funcionario");
-                    result = await _userManager.RemoveFromRoleAsync(user, "Cliente");
+                    //result = await _userManager.AddToRoleAsync(user, "Funcionario");
+                    //result = await _userManager.RemoveFromRoleAsync(user, "Cliente");
                 }
-                else if (!(model[i].IsSelected) && (IsInRole))
+                else if (!(model[i].IsSelected))
                 {
                     user.EmpresaId = null;
                     try
@@ -230,8 +233,8 @@ namespace MyAirbnb.Controllers
                     {
                         return NotFound();
                     }
-                    result = await _userManager.RemoveFromRoleAsync(user, "Funcionario");
-                    result = await _userManager.AddToRoleAsync(user, "Cliente");
+                    //result = await _userManager.RemoveFromRoleAsync(user, "Funcionario");
+                    //result = await _userManager.AddToRoleAsync(user, "Cliente");
 
                 }
             }
