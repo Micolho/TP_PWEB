@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Appdata\" />
+    <Folder Include="wwwroot\Imagens\" />
   </ItemGroup>
 
 </Project>
