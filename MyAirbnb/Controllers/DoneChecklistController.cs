@@ -36,6 +36,21 @@ namespace MyAirbnb.Controllers
                                             .FirstOrDefaultAsync();
             if (reserva == null)
                 return NotFound();
+
+            try
+            {
+                if (reserva.Confirmado)
+                {
+                    reserva.Prepared = true;
+                    _context.Update(reserva);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
             ViewData["ReservaId"] = reserva.Id;
             //verificar qual o tipo de imovel e as suas checklists 
             Imovel imovel = await _context.Imoveis.Where(i => i.Id == reserva.ImovelId && 
@@ -69,6 +84,20 @@ namespace MyAirbnb.Controllers
                                             .FirstOrDefaultAsync();
             if (reserva == null)
                 return NotFound();
+
+            try
+            {
+                if (reserva.Prepared)
+                {
+                    reserva.Delivered = true;
+                    _context.Update(reserva);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
 
             ViewData["ReservaId"] = reserva.Id;
 

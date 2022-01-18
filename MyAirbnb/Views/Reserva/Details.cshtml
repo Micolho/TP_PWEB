@@ -23,12 +23,6 @@
             @Html.DisplayFor(model => model.DataCheckout)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Confirmado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Confirmado)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Imovel)
         </dt>
         <dd class = "col-sm-10">
@@ -46,6 +40,24 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Cliente.Nome)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Confirmado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Confirmado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Prepared)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Prepared)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Delivered)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Delivered)
+        </dd>
     </dl>
 </div>
 <div>
@@ -59,9 +71,26 @@
         {
             <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Accept Reservation</a>
         }
-    <a class="btn btn-primary" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Prepare Reservation</a>
-    <a class="btn btn-warning" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Deliver Reservation</a>
+        @if (!Model.Prepared && Model.Confirmado)
+        {
+            <a class="btn btn-primary" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Prepare Reservation</a>
+        }
+        else
+        {
+            <a class="btn btn-primary disabled" asp-action="IndexPreparacao" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Prepare Reservation</a>
+        }
+        @if (!Model.Delivered && Model.Prepared)
+        {
+            <a class="btn btn-warning" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Deliver Reservation</a>
+        }
+        else
+        {
+            <a class="btn btn-warning disabled" asp-action="IndexEntrega" asp-controller="DoneChecklist" asp-route-id="@Model.Id">Deliver Reservation</a>
+        }
     }
+
+
+
     @if (User.IsInRole("Cliente"))
     {
         <a class="btn btn-primary" asp-action="Create" asp-controller="Classificacao" asp-route-id="@Model.ImovelId">Write a Review</a>
