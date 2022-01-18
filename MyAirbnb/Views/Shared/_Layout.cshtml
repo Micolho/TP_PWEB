@@ -31,39 +31,51 @@
                             </li>*@
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Imovel"
+                                <a class="nav-link" asp-controller="Imovel"
                                 asp-action="Index">Imovel</a>
                             </li>
 
                             @if (User.IsInRole("Admins"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Categoria"
+                                    <a class="nav-link" asp-controller="Categoria"
                                     asp-action="Index">Categories</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Administration"
-                                    asp-action="Index">Administration</a>
+                                    <a class="nav-link" asp-controller="Administration"
+                                    asp-action="Index">User Mgmt</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Imagens"
+                                    asp-action="Index">Images</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Classificacao"
+                                    asp-action="Index">Reviews</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Empresa"
+                                    asp-action="IndexAdmin">Enterprises</a>
                                 </li>
                             }
                             @if (User.IsInRole("Gestor"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Checklist"
+                                    <a class="nav-link" asp-controller="Checklist"
                                     asp-action="Index">Checklists</a>
                                 </li>
-                            }
-                            @if (User.IsInRole("Cliente"))
-                            {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller=""
-                                    asp-action="">Your History</a>
+                                    <a class="nav-link" asp-controller="Empresa"
+                                    asp-action="Index">My company</a>
                                 </li>
                             }
-
-                        @*@if(User.Identity.IsAuthenticated){
-                            
-                        }*@
+                            @*@if (User.IsInRole("Cliente"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller=""
+                                    asp-action="">Your History</a>
+                                </li>
+                            }*@
 
                     </ul>
                 </div>
