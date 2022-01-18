@@ -64,7 +64,6 @@ namespace MyAirbnb.Controllers
                 }
             }
             var thisId = id;
-            //return RedirectToAction("Index");
             if(isImovel)
                 return RedirectToAction("Details", "Imovel", new {id = thisId });
             else
@@ -74,6 +73,8 @@ namespace MyAirbnb.Controllers
         // GET: Imagens
         public async Task<IActionResult> Index()
         {
+            if(!User.IsInRole("Admins"))
+                return NotFound();
             return View(await _context.Imagens.ToListAsync());
         }
 
@@ -93,6 +94,9 @@ namespace MyAirbnb.Controllers
         // GET: Imagens/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!User.IsInRole("Admins") && !User.IsInRole("Gestor"))
+                return NotFound();  //if cliente
+
             if (id == null)
             {
                 return NotFound();

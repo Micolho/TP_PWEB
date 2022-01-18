@@ -83,6 +83,7 @@ namespace MyAirbnb.Controllers
                 imovel.Imagens = imagens;
 
             var reviews = await _context.Classificacaos
+                .Include(m => m.Utilizador)
                 .Where(m => m.ImovelId == imovel.Id).ToArrayAsync();
 
             if (reviews != null)
