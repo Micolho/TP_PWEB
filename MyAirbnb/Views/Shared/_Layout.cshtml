@@ -58,12 +58,15 @@
                                     asp-action="IndexAdmin">Enterprises</a>
                                 </li>
                             }
+                            @if (User.IsInRole("Gestor") || User.IsInRole("Funcionario"))
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Imovel"
+                                    asp-action="MyIndex">My Properties</a>
+                            </li>
+                            }
                             @if (User.IsInRole("Gestor"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Imovel"
-                                    asp-action="MyIndex">My Properties</a>
-                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Empresa"
                                     asp-action="Index">My company</a>

@@ -87,20 +87,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.TipoImovel)
             </th>
-            @if (User.IsInRole("Admins"))
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Dono)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Responsavel)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Listado)
-                </th>
+            @if( !User.IsInRole("Cliente") ){
+                <th></th>
             }
-
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -124,20 +113,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TipoImovel.Nome)
             </td>
-            @if(User.IsInRole("Admins")){
+            @if( !User.IsInRole("Cliente") ){
                 <td>
-                    @Html.DisplayFor(modelItem => item.Dono.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Responsavel.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Listado)
+                    <a class="btn alert-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
             }
-            <td>
-                <a class="btn alert-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-            </td>
         </tr>
 }
     </tbody>

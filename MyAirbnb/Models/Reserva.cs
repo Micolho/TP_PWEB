@@ -26,6 +26,12 @@ namespace MyAirbnb.Models
         [DefaultValue(false)]
         public bool Confirmado { get; set; }
 
+        [DefaultValue(false)]
+        public bool Prepared { get; set; }
+
+        [DefaultValue(false)]
+        public bool Delivered { get; set; }
+
         //Imovel
         [ForeignKey("ImovelId")]
         public int ImovelId { get; set; }

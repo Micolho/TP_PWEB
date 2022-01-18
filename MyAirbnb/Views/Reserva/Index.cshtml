@@ -19,10 +19,16 @@
                 @Html.DisplayNameFor(model => model.DataCheckout)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Imovel)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Confirmado)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imovel)
+                @Html.DisplayNameFor(model => model.Prepared)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Delivered)
             </th>
             <th></th>
         </tr>
@@ -37,10 +43,16 @@
                 @Html.DisplayFor(modelItem => item.DataCheckout)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Imovel.Nome)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Confirmado)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imovel.Nome)
+                @Html.DisplayFor(modelItem => item.Prepared)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Delivered)
             </td>
             <td>
                 @*<a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
