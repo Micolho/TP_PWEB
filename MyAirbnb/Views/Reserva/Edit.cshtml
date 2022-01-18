@@ -33,7 +33,7 @@
                 <label  class="control-label">Client Name:</label>
                 <input asp-for="Cliente.Nome" readonly="readonly" class="form-control"/>
                 <input asp-for="ClienteId" type="hidden" class="form-control"/>
-                <a class="btn alert-primary btn-sm" asp-controller="ApplicationUser"
+                <a class="btn alert-primary btn-sm" asp-controller="Cliente"
                 asp-action="Details" asp-route-id="@Model.ClienteId">Detalhes do Cliente</a>
             </div>
 
