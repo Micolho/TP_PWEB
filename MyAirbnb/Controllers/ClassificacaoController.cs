@@ -78,7 +78,7 @@ namespace MyAirbnb.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Estrelas,Comentario,ImovelId,UtilizadorId")] Classificacao classificacao)
+        public async Task<IActionResult> Create([Bind("Estrelas,Comentario,ImovelId,UtilizadorId")] Classificacao classificacao)
         {
             if (ModelState.IsValid)
             {

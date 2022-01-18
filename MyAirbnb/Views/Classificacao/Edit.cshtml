@@ -23,16 +23,12 @@
                 <input asp-for="Comentario" class="form-control" />
                 <span asp-validation-for="Comentario" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="ImovelId" class="control-label"></label>
-                <select asp-for="ImovelId" class="form-control" asp-items="ViewBag.ImovelId"></select>
-                <span asp-validation-for="ImovelId" class="text-danger"></span>
+            <div class="form-group">
+                <input type="hidden" asp-for="ImovelId" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="UtilizadorId" class="control-label"></label>
-                <select asp-for="UtilizadorId" class="form-control" asp-items="ViewBag.UtilizadorId"></select>
-                <span asp-validation-for="UtilizadorId" class="text-danger"></span>
-            </div>*@
+                <input type="hidden" asp-for="UtilizadorId" class="form-control" />
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a class="btn btn-secondary" asp-action="Index">Back to List</a>
