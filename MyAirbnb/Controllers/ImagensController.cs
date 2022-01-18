@@ -85,13 +85,8 @@ namespace MyAirbnb.Controllers
         }
 
         // GET: Imagens/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var imagens = await _context.Imagens
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (imagens == null)
