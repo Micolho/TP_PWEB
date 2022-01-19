@@ -135,7 +135,7 @@ namespace MyAirbnb.Controllers
                     ViewData["Erro"] = "The Check-in Date is unavailable! \n" +
                         "Check-in Date is available before " + availableCheckinAt.DataCheckin.ToShortDateString() + 
                         " or after " + availableCheckinAt.DataCheckout.ToShortDateString();
-                    return View();
+                    return View(model);
                 }
 
                 Reserva availableCheckoutAt = await reservasAt
@@ -144,12 +144,12 @@ namespace MyAirbnb.Controllers
                                         .Where(r => r.Confirmado)
                                         .FirstOrDefaultAsync();
 
-                if (availableCheckinAt != null)
+                if (availableCheckoutAt != null)
                 {
                     ViewData["Erro"] = "The Check-out Date is unavailable! \n" +
-                        "Check-out Date is available before " + availableCheckinAt.DataCheckin.ToShortDateString() + 
-                        " or after " + availableCheckinAt.DataCheckout.ToShortDateString();
-                    return View();
+                        "Check-out Date is available before " + availableCheckoutAt.DataCheckin.ToShortDateString() + 
+                        " or after " + availableCheckoutAt.DataCheckout.ToShortDateString();
+                    return View(model);
                 }
 
                 Reserva reserva = new Reserva

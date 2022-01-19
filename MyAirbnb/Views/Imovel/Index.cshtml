@@ -87,9 +87,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.TipoImovel)
             </th>
-            @if( !User.IsInRole("Cliente") ){
+            @*@if( !User.IsInRole("Cliente") ){
                 <th></th>
-            }
+            }*@
         </tr>
     </thead>
     <tbody>
@@ -113,11 +113,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TipoImovel.Nome)
             </td>
-            @if( !User.IsInRole("Cliente") ){
+            @*@if( !User.IsInRole("Cliente") ){
                 <td>
                     <a class="btn alert-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
-            }
+            }*@
         </tr>
 }
     </tbody>

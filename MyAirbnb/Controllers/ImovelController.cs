@@ -254,10 +254,13 @@ namespace MyAirbnb.Controllers
         [Authorize(Roles = "Gestor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, CreateImovelViewModel model)
+        public async Task<IActionResult> Edit(int id, CreateImovelViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             var oldImovel = await _context.Imoveis.FindAsync(id);
+
+            if (oldImovel == null)
+                return NotFound();
 
             if (user.Id != oldImovel.DonoId)
             {
@@ -271,37 +274,56 @@ namespace MyAirbnb.Controllers
 
             if (ModelState.IsValid)
             {
-                Imovel imovel = new Imovel
-                {
-                    Id = model.Id,
-                    PrecoPorNoite = model.PrecoPorNoite,
-                    EspacoM2 = model.EspacoM2,
-                    Nome = model.Nome,
-                    NumeroCamas = model.NumeroCamas,
-                    NumeroPessoas = model.NumeroPessoas,
-                    numeroWC = model.numeroWC,
-                    TemCozinha = model.TemCozinha,
-                    TemJacuzzi = model.TemJacuzzi,
-                    TemPiscina = model.TemPiscina,
-                    HoraCheckIn = model.HoraCheckIn,
-                    HoraCheckOut = model.HoraCheckOut,
-                    Localidade = model.Localidade,
-                    Rua = model.Rua,
-                    TipoImovelId = model.TipoImovelId,
-                    Descricao = model.Descricao,
-                    ResponsavelId = model.ResponsavelId,
-                    DonoId = user.Id,
-                    Listado = model.Listado
-                };
+                //Imovel imovel = new Imovel
+                //{
+                //    Id = id,
+                //    PrecoPorNoite = model.PrecoPorNoite,
+                //    EspacoM2 = model.EspacoM2,
+                //    Nome = model.Nome,
+                //    NumeroCamas = model.NumeroCamas,
+                //    NumeroPessoas = model.NumeroPessoas,
+                //    numeroWC = model.numeroWC,
+                //    TemCozinha = model.TemCozinha,
+                //    TemJacuzzi = model.TemJacuzzi,
+                //    TemPiscina = model.TemPiscina,
+                //    HoraCheckIn = model.HoraCheckIn,
+                //    HoraCheckOut = model.HoraCheckOut,
+                //    Localidade = model.Localidade,
+                //    Rua = model.Rua,
+                //    TipoImovelId = model.TipoImovelId,
+                //    Descricao = model.Descricao,
+                //    ResponsavelId = model.ResponsavelId,
+                //    DonoId = user.Id,
+                //    Listado = model.Listado
+                //};
+
+                oldImovel.PrecoPorNoite = model.PrecoPorNoite;
+                oldImovel.EspacoM2 = model.EspacoM2;
+                oldImovel.Nome = model.Nome;
+                oldImovel.NumeroCamas = model.NumeroCamas;
+                oldImovel.NumeroPessoas = model.NumeroPessoas;
+                oldImovel.numeroWC = model.numeroWC;
+                oldImovel.TemCozinha = model.TemCozinha;
+                oldImovel.TemJacuzzi = model.TemJacuzzi;
+                oldImovel.TemPiscina = model.TemPiscina;
+                oldImovel.HoraCheckIn = model.HoraCheckIn;
+                oldImovel.HoraCheckOut = model.HoraCheckOut;
+                oldImovel.Localidade = model.Localidade;
+                oldImovel.Rua = model.Rua;
+                oldImovel.TipoImovelId = model.TipoImovelId;
+                oldImovel.Descricao = model.Descricao;
+                oldImovel.ResponsavelId = model.ResponsavelId;
+                oldImovel.Listado = model.Listado;
+
 
                 try
                 {
-                    _context.Update(imovel);
+                    _context.Update(oldImovel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ImovelExists(imovel.Id))
+                    if (!ImovelExists(oldImovel.Id))
                     {
                         return NotFound();
                     }

@@ -30,7 +30,9 @@ namespace MyAirbnb.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             //mostra apenas as checklists do utilizador em questao
-            var applicationDbContext = _context.Checklists.Where(c => c.DonoId == user.Id);
+            var applicationDbContext = _context.Checklists
+                .Include(c => c.Categoria)
+                .Where(c => c.DonoId == user.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 

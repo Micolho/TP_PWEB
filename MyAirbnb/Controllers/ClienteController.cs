@@ -52,6 +52,7 @@ namespace MyAirbnb.Controllers
 
             //retornar os comentarios do user
             var classificacoes = await _context.Classificacaos
+                                        .Include(c => c.Imovel)
                                         .Where(c => c.UtilizadorId == cliente.Id)
                                         .ToListAsync();
 

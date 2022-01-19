@@ -76,15 +76,18 @@
                                     asp-action="Index">Checklists</a>
                                 </li>
                             }
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Reserva"
-                                asp-action="Index">Reservations</a>
-                            </li>
                             @if (User.IsInRole("Cliente"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Classificacao"
                                     asp-action="Index">Reviews</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Gestor") || User.IsInRole("Funcionario") || User.IsInRole("Cliente"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Reserva"
+                                    asp-action="Index">Reservations</a>
                                 </li>
                             }
 

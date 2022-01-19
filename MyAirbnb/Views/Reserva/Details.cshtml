@@ -61,7 +61,7 @@
     </dl>
 </div>
 <div>
-    @if (User.IsInRole("Admins") || User.IsInRole("Gestor"))
+    @if (User.IsInRole("Admins") || User.IsInRole("Gestor") || User.IsInRole("Funcionario"))
     {
         @if (Model.Confirmado)
         {
@@ -91,7 +91,7 @@
 
 
 
-    @if (User.IsInRole("Cliente"))
+    @if (User.IsInRole("Cliente") && Model.Delivered)
     {
         <a class="btn btn-primary" asp-action="Create" asp-controller="Classificacao" asp-route-id="@Model.ImovelId">Write a Review</a>
     }
